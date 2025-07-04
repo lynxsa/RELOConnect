@@ -1,0 +1,48 @@
+{
+  "name": "@reloconnect/driver-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "dev": "expo start --dev-client",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.1.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-navigation/bottom-tabs": "^7.3.10",
+    "@react-navigation/native": "^7.1.6",
+    "@react-navigation/stack": "^7.4.2",
+    "@tanstack/react-query": "^5.81.5",
+    "axios": "^1.10.0",
+    "expo": "~53.0.17",
+    "expo-camera": "^16.1.10",
+    "expo-font": "~13.3.2",
+    "expo-location": "~18.0.7",
+    "expo-maps": "0.11.0",
+    "expo-router": "~4.1.24",
+    "expo-status-bar": "~2.1.0",
+    "nativewind": "^4.1.24",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-gesture-handler": "~2.20.2",
+    "react-native-maps": "1.19.0",
+    "react-native-reanimated": "~3.16.4",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "3.34.0",
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^3.4.17",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@types/react": "~18.3.12",
+    "typescript": "~5.6.3"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "RELOConnect Driver",
+    "slug": "reloconnect-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/driver-icon.png",
+    "scheme": "reloconnect-driver",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/driver-splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FF6B00"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lynxsa.reloconnect.driver"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/driver-adaptive-icon.png",
+        "backgroundColor": "#FF6B00"
+      },
+      "package": "com.lynxsa.reloconnect.driver"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-camera",
+      "expo-location"
+    ]
+  }
+}

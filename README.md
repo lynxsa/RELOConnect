@@ -1,8 +1,12 @@
-# RELOConnect - Comprehensive Relocation Platform
+# RELOConnect - Production-Ready Monorepo
 
-**Tagline:** Revolutionising Relocations – Smart. Safe. Seamless.
+[![CI/CD Pipeline](https://github.com/lynxsa/RELOConnect/workflows/CI/badge.svg)](https://github.com/lynxsa/RELOConnect/actions)
+[![Coverage](https://codecov.io/gh/lynxsa/RELOConnect/branch/main/graph/badge.svg)](https://codecov.io/gh/lynxsa/RELOConnect)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A full-stack relocation and logistics platform built with React Native Expo, TypeScript, Node.js, and PostgreSQL.
+> **Revolutionising Relocations – Smart. Safe. Seamless.**
+
+RELOConnect is a comprehensive, production-ready relocation platform built as a microservices-based monorepo. This refactored version implements enterprise-grade architecture, advanced pricing algorithms, AI-powered features, and world-class development practices.
 
 ## 🌟 Features
 
