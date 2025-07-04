@@ -1,0 +1,438 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  phone       String   @unique
+  firstName   String
+  lastName    String
+  avatar      String?
+  role        Role     @default(USER)
+  isVerified  Boolean  @default(false)
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  bookings         Booking[]
+  driverProfile    Driver?
+  donations        DonationItem[]
+  requestedItems   DonationItem[] @relation("DonationRequester")
+  sentMessages     ChatMessage[]  @relation("MessageSender")
+  receivedMessages ChatMessage[]  @relation("MessageReceiver")
+  payments         Payment[]
+
+  @@map("users")
+}
+
+model Driver {
+  id                String  @id @default(cuid())
+  userId            String  @unique
+  licenseNumber     String  @unique
+  vehicleId         String
+  rating            Float   @default(0)
+  totalTrips        Int     @default(0)
+  isOnline          Boolean @default(false)
+  currentLatitude   Float?
+  currentLongitude  Float?
+  currentAddress    String?
+
+  // Documents
+  licenseDoc        String
+  idDoc            String
+  vehicleRegDoc    String
+  insuranceDoc     String
+
+  // Bank Details
+  accountNumber    String
+  bankName         String
+  accountHolder    String
+
+  // Relations
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicle          Vehicle    @relation(fields: [vehicleId], references: [id])
+  bookings         Booking[]
+  
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@map("drivers")
+}
+
+model Vehicle {
+  id           String       @id @default(cuid())
+  type         VehicleType
+  vehicleClass VehicleClass? @relation(fields: [vehicleClassId], references: [id])
+  vehicleClassId String?
+  capacity     Float        // in cubic meters
+  maxWeight    Int          // in kg
+  name         String
+  description  String
+  basePrice    Float
+  pricePerKm   Float
+  icon         String
+
+  // Relations
+  drivers      Driver[]
+  bookings     Booking[]
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("vehicles")
+}
+
+model Booking {
+  id                String        @id @default(cuid())
+  
+  // Locations
+  pickupLatitude    Float
+  pickupLongitude   Float
+  pickupAddress     String
+  pickupCity        String
+  pickupState       String
+  pickupPostalCode  String
+  pickupCountry     String
+  
+  dropoffLatitude   Float
+  dropoffLongitude  Float
+  dropoffAddress    String
+  dropoffCity       String
+  dropoffState      String
+  dropoffPostalCode String
+  dropoffCountry    String
+  
+  // Booking Details
+  scheduledDateTime DateTime
+  estimatedDistance Float
+  estimatedDuration Int           // in minutes
+  actualDistance    Float?
+  actualDuration    Int?          // in minutes
+  
+  // Package Details
+  packageDescription String
+  packageWeight      Float?
+  packageVolume      Float?
+  isFragile          Boolean      @default(false)
+  isValuable         Boolean      @default(false)
+  
+  // Extra Services
+  loadingService     Boolean      @default(false)
+  stairsCount        Int          @default(0)
+  packingService     Boolean      @default(false)
+  cleaningService    Boolean      @default(false)
+  expressService     Boolean      @default(false)
+  insuranceService   Boolean      @default(false)
+  
+  // Pricing
+  totalPrice         Float
+  paymentMethod      PaymentMethod
+  
+  // Status
+  status             BookingStatus @default(PENDING)
+  
+  // Relations
+  userId             String
+  driverId           String?
+  vehicleId          String
+  
+  user               User          @relation(fields: [userId], references: [id])
+  driver             Driver?       @relation(fields: [driverId], references: [id])
+  vehicle            Vehicle       @relation(fields: [vehicleId], references: [id])
+  payments           Payment[]
+  messages           ChatMessage[]
+  
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@map("bookings")
+}
+
+model DonationItem {
+  id          String            @id @default(cuid())
+  title       String
+  description String
+  category    DonationCategory
+  condition   ItemCondition
+  images      String[] @default([]) // Array of image URLs
+  
+  // Location
+  latitude    Float
+  longitude   Float
+  address     String
+  city        String
+  state       String
+  postalCode  String
+  country     String
+  
+  // Relations
+  donorId     String
+  requesterId String?
+  
+  donor       User              @relation(fields: [donorId], references: [id])
+  requester   User?             @relation("DonationRequester", fields: [requesterId], references: [id])
+  
+  status      DonationStatus    @default(AVAILABLE)
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("donation_items")
+}
+
+model ChatMessage {
+  id         String      @id @default(cuid())
+  senderId   String
+  receiverId String
+  message    String
+  type       MessageType @default(TEXT)
+  bookingId  String?
+  read       Boolean     @default(false)
+  
+  // Relations
+  sender     User        @relation("MessageSender", fields: [senderId], references: [id])
+  receiver   User        @relation("MessageReceiver", fields: [receiverId], references: [id])
+  booking    Booking?    @relation(fields: [bookingId], references: [id])
+  
+  createdAt  DateTime    @default(now())
+
+  @@map("chat_messages")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  bookingId     String
+  amount        Float
+  currency      String        @default("ZAR")
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?
+  
+  // Relations
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  
+  createdAt     DateTime      @default(now())
+  completedAt   DateTime?
+
+  @@map("payments")
+}
+
+model NewsArticle {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  content     String
+  imageUrl    String?
+  source      String
+  author      String?
+  publishedAt DateTime
+  category    NewsCategory
+  tags        String[] @default([])
+  
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("news_articles")
+}
+
+model Port {
+  id         String         @id @default(cuid())
+  name       String
+  code       String         @unique
+  country    String
+  latitude   Float
+  longitude  Float
+  timezone   String
+  facilities String[] @default([])
+  
+  schedules  PortSchedule[]
+  
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("ports")
+}
+
+model Vessel {
+  id         String         @id @default(cuid())
+  name       String
+  imo        String         @unique
+  type       String
+  flag       String
+  length     Float?
+  width      Float?
+  draft      Float?
+  
+  schedules  PortSchedule[]
+  
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("vessels")
+}
+
+model PortSchedule {
+  id       String          @id @default(cuid())
+  portId   String
+  vesselId String
+  eta      DateTime
+  etd      DateTime
+  status   ScheduleStatus  @default(SCHEDULED)
+  berth    String?
+  cargo    String
+  
+  // Relations
+  port     Port            @relation(fields: [portId], references: [id])
+  vessel   Vessel          @relation(fields: [vesselId], references: [id])
+  
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("port_schedules")
+}
+
+// Pricing Models
+model VehicleClass {
+  id          String        @id @default(cuid())
+  name        String
+  capacity    String
+  maxWeight   Int
+  icon        String
+  description String
+  order       Int
+  vehicles    Vehicle[]
+  prices      PricingRate[]
+
+  @@map("vehicle_classes")
+}
+
+model DistanceBand {
+  id           String        @id @default(cuid())
+  minKm        Float
+  maxKm        Float?        // Null for "1000+" band
+  label        String
+  prices       PricingRate[]
+
+  @@map("distance_bands")
+}
+
+model PricingRate {
+  id            String       @id @default(cuid())
+  vehicleClass  VehicleClass @relation(fields: [vehicleClassId], references: [id])
+  vehicleClassId String
+  distanceBand  DistanceBand @relation(fields: [distanceBandId], references: [id])
+  distanceBandId String
+  baseFare      Float
+
+  @@unique([vehicleClassId, distanceBandId])
+  @@map("pricing_rates")
+}
+
+model ExtraService {
+  id          String        @id @default(cuid())
+  name        String
+  code        String        @unique
+  description String
+  priceType   String        // flat, per_unit, percentage
+  price       Float
+  unit        String?       // e.g., 'person', 'flight', '15min'
+  icon        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@map("extra_services")
+}
+
+// Enums
+enum Role {
+  USER
+  DRIVER
+  ADMIN
+}
+
+enum VehicleType {
+  VAN
+  TRUCK
+  PICKUP
+  MOTORCYCLE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  YOCO
+  APPLE_PAY
+  GOOGLE_PAY
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum DonationCategory {
+  FURNITURE
+  ELECTRONICS
+  CLOTHING
+  BOOKS
+  APPLIANCES
+  OTHER
+}
+
+enum ItemCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+}
+
+enum DonationStatus {
+  AVAILABLE
+  REQUESTED
+  COLLECTED
+  COMPLETED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  LOCATION
+  SYSTEM
+}
+
+enum NewsCategory {
+  LOGISTICS
+  RELOCATION
+  INDUSTRY
+  TECHNOLOGY
+}
+
+enum ScheduleStatus {
+  SCHEDULED
+  ARRIVED
+  DEPARTED
+  DELAYED
+  CANCELLED
+}
