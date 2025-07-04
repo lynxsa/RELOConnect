@@ -114,6 +114,7 @@ export default function PaymentScreen() {
         dropoffLocation,
         scheduledDateTime: new Date(),
         vehicleType: selectedVehicle.type,
+        vehicleClassId: selectedVehicle.id || 'default-class', // Add missing vehicleClassId
         estimatedDistance: 15, // Mock data
         estimatedDuration: 45, // Mock data
         packageDetails: {
