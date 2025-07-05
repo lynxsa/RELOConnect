@@ -3,34 +3,42 @@
 ## Milestone Structure
 
 ### Week 1: Critical Debugging & App Restoration
+
 **Due Date:** Week 1  
 **Description:** Eliminate Hermes/HMRClient error and restore clean builds
 
 ### Week 2: Code Cleanup & Dependency Optimization
+
 **Due Date:** Week 2  
 **Description:** Remove dead code, unify configurations, ensure consistent dependencies
 
 ### Week 3: UI Rebuild & Price Calculator Integration
+
 **Due Date:** Week 3  
 **Description:** Reconstruct booking flow with real-time pricing for SA market
 
 ### Week 4: Driver & Owner Onboarding + Real-Time Tracking
+
 **Due Date:** Week 4  
 **Description:** Complete KYC flows and enable live location sharing
 
 ### Week 5: Admin Dashboard Overhaul
+
 **Due Date:** Week 5  
 **Description:** Build comprehensive admin oversight and control system
 
 ### Week 6: Payment System + Compliance
+
 **Due Date:** Week 6  
 **Description:** Integrate SA payments, commissions, and automated payouts
 
 ### Week 7: AI & API Integrations
+
 **Due Date:** Week 7  
 **Description:** Enhance platform with ReloAI, ReloPorts, and ReloNews
 
 ### Week 8: Testing, QA & Beta Launch
+
 **Due Date:** Week 8  
 **Description:** Validate stability, fix bugs, and roll out to beta testers
 
@@ -39,6 +47,7 @@
 ## Issue Templates
 
 ### 🐛 Bug Report Template
+
 ```markdown
 **Bug Description:**
 Brief description of the bug
@@ -64,6 +73,7 @@ What actually happens
 ```
 
 ### ✨ Feature Request Template
+
 ```markdown
 **Feature Description:**
 Brief description of the feature
@@ -86,6 +96,7 @@ As a [user type], I want [goal] so that [benefit]
 ```
 
 ### 🔧 Technical Task Template
+
 ```markdown
 **Task Description:**
 Brief description of the technical task
@@ -110,6 +121,7 @@ Brief description of the technical task
 ## Week 1 Issues
 
 ### Issue #1: Clear Caches & Reinstall Dependencies
+
 **Type:** 🔧 Technical Task  
 **Priority:** Critical  
 **Assignee:** Developer Team  
@@ -118,6 +130,7 @@ Brief description of the technical task
 Clear all caches and reinstall dependencies to resolve Hermes/HMRClient errors.
 
 **Tasks:**
+
 - [ ] Remove node_modules, .expo, dist, ios/build, android/build
 - [ ] Clear watchman cache
 - [ ] Clear npm/yarn cache
@@ -125,6 +138,7 @@ Clear all caches and reinstall dependencies to resolve Hermes/HMRClient errors.
 - [ ] Start Expo with clear cache flag
 
 **Commands:**
+
 ```bash
 rm -rf node_modules .expo dist ios/build android/build
 watchman watch-del-all
@@ -134,6 +148,7 @@ npx expo start -c
 ```
 
 ### Issue #2: Configure Hermes Engine
+
 **Type:** 🔧 Technical Task  
 **Priority:** Critical  
 **Assignee:** React Native Developer  
@@ -142,12 +157,14 @@ npx expo start -c
 Properly configure Hermes JavaScript engine in app.json and ensure compatibility.
 
 **Tasks:**
+
 - [ ] Set "jsEngine": "hermes" in app.json
 - [ ] Verify React Native version compatibility
 - [ ] Test Hermes performance
 - [ ] Fallback to JSC if needed
 
 ### Issue #3: Fix Entry Point Registration
+
 **Type:** 🐛 Bug Report  
 **Priority:** Critical  
 **Assignee:** React Native Developer  
@@ -156,11 +173,13 @@ Properly configure Hermes JavaScript engine in app.json and ensure compatibility
 Ensure proper app entry point registration with Expo.
 
 **Tasks:**
+
 - [ ] Verify index.js/AppEntry.js configuration
 - [ ] Import and register root component correctly
 - [ ] Test app launch on iOS and Android
 
 ### Issue #4: Metro & Babel Configuration
+
 **Type:** 🔧 Technical Task  
 **Priority:** High  
 **Assignee:** Build Engineer  
@@ -169,12 +188,14 @@ Ensure proper app entry point registration with Expo.
 Verify and fix Metro bundler and Babel configuration.
 
 **Tasks:**
+
 - [ ] Check babel.config.js includes babel-preset-expo
 - [ ] Verify metro.config.js workspace resolution
 - [ ] Test bundler performance
 - [ ] Fix any configuration conflicts
 
 ### Issue #5: Dev Client Launch Testing
+
 **Type:** 🔧 Technical Task  
 **Priority:** High  
 **Assignee:** QA Engineer  
@@ -183,6 +204,7 @@ Verify and fix Metro bundler and Babel configuration.
 Test dev client launch and verify error resolution.
 
 **Tasks:**
+
 - [ ] Launch with --dev-client flag
 - [ ] Test on multiple devices
 - [ ] Verify HMR functionality
@@ -193,6 +215,7 @@ Test dev client launch and verify error resolution.
 ## Week 2 Issues
 
 ### Issue #6: Dependency Audit & Updates
+
 **Type:** 🔧 Technical Task  
 **Priority:** High  
 **Assignee:** Technical Lead  
@@ -201,6 +224,7 @@ Test dev client launch and verify error resolution.
 Audit and update all dependencies to latest stable versions.
 
 **Tasks:**
+
 - [ ] Run npm outdated/yarn outdated
 - [ ] Update Expo SDK to ≥ 50
 - [ ] Update React Native to ≥ 0.73
@@ -208,6 +232,7 @@ Audit and update all dependencies to latest stable versions.
 - [ ] Test compatibility after updates
 
 ### Issue #7: ESLint & Prettier Setup
+
 **Type:** 🔧 Technical Task  
 **Priority:** Medium  
 **Assignee:** Developer Team  
@@ -216,6 +241,7 @@ Audit and update all dependencies to latest stable versions.
 Install and configure code linting and formatting tools.
 
 **Tasks:**
+
 - [ ] Install ESLint with Airbnb config
 - [ ] Install and configure Prettier
 - [ ] Set up Husky pre-commit hooks
@@ -223,6 +249,7 @@ Install and configure code linting and formatting tools.
 - [ ] Add npm scripts for linting
 
 ### Issue #8: Monorepo Configuration Cleanup
+
 **Type:** 🔧 Technical Task  
 **Priority:** Medium  
 **Assignee:** DevOps Engineer  
@@ -231,6 +258,7 @@ Install and configure code linting and formatting tools.
 Clean up monorepo structure and remove duplicate dependencies.
 
 **Tasks:**
+
 - [ ] Remove unused react-native-* packages
 - [ ] Unify TypeScript configurations
 - [ ] Create shared tsconfig.base.json
@@ -238,6 +266,7 @@ Clean up monorepo structure and remove duplicate dependencies.
 - [ ] Test workspace resolution
 
 ### Issue #9: Environment Configuration
+
 **Type:** 🔧 Technical Task  
 **Priority:** Medium  
 **Assignee:** DevOps Engineer  
@@ -246,12 +275,14 @@ Clean up monorepo structure and remove duplicate dependencies.
 Set up proper environment configuration management.
 
 **Tasks:**
+
 - [ ] Create .env.example template
 - [ ] Configure environment variables for API_URL, PAYSTACK_KEY, GEMINI_KEY
 - [ ] Set up different environments (dev, staging, prod)
 - [ ] Update documentation
 
 ### Issue #10: Build Scripts Optimization
+
 **Type:** 🔧 Technical Task  
 **Priority:** Low  
 **Assignee:** Build Engineer  
@@ -260,6 +291,7 @@ Set up proper environment configuration management.
 Add and optimize build scripts for better developer experience.
 
 **Tasks:**
+
 - [ ] Add clean script
 - [ ] Add bootstrap script
 - [ ] Optimize build performance
@@ -270,6 +302,7 @@ Add and optimize build scripts for better developer experience.
 ## Week 3 Issues
 
 ### Issue #11: Booking Flow Screens Development
+
 **Type:** ✨ Feature Request  
 **Priority:** Critical  
 **Assignee:** Frontend Team  
@@ -281,6 +314,7 @@ Build the complete user booking flow with modern UI.
 As a user, I want to easily book a logistics service so that I can move my items efficiently.
 
 **Tasks:**
+
 - [ ] Pickup/Drop-off Input with Google Places
 - [ ] Vehicle Selection with horizontal cards
 - [ ] Service Extras Form with toggles
@@ -288,6 +322,7 @@ As a user, I want to easily book a logistics service so that I can move my items
 - [ ] Payment Screen with fare breakdown
 
 ### Issue #12: NativeWind Styling Implementation
+
 **Type:** 🔧 Technical Task  
 **Priority:** High  
 **Assignee:** UI/UX Developer  
@@ -296,6 +331,7 @@ As a user, I want to easily book a logistics service so that I can move my items
 Implement consistent styling using NativeWind (Tailwind-like) framework.
 
 **Tasks:**
+
 - [ ] Set up NativeWind configuration
 - [ ] Implement blue gradient theme (#001F5A to #0061FF)
 - [ ] Define typography scale (H1 32pt, Body 16pt, Caption 12pt)
@@ -303,6 +339,7 @@ Implement consistent styling using NativeWind (Tailwind-like) framework.
 - [ ] Test dark mode compatibility
 
 ### Issue #13: South African Pricing Table Integration
+
 **Type:** ✨ Feature Request  
 **Priority:** Critical  
 **Assignee:** Backend + Frontend Team  
@@ -311,6 +348,7 @@ Implement consistent styling using NativeWind (Tailwind-like) framework.
 Implement the complete SA pricing structure with real-time calculations.
 
 **Tasks:**
+
 - [ ] Create pricing lookup tables
 - [ ] Implement distance-based calculations
 - [ ] Add extras pricing (stairs, loading, packing, etc.)
@@ -318,6 +356,7 @@ Implement the complete SA pricing structure with real-time calculations.
 - [ ] Add insurance and express options
 
 ### Issue #14: Price Calculator UI Component
+
 **Type:** ✨ Feature Request  
 **Priority:** High  
 **Assignee:** Frontend Developer  
@@ -326,6 +365,7 @@ Implement the complete SA pricing structure with real-time calculations.
 Build interactive price calculator with live updates.
 
 **Tasks:**
+
 - [ ] Distance input with autocomplete
 - [ ] Vehicle class selector
 - [ ] Extras toggles with price impact
@@ -337,6 +377,7 @@ Build interactive price calculator with live updates.
 ## Week 4 Issues
 
 ### Issue #15: Owner KYC Flow
+
 **Type:** ✨ Feature Request  
 **Priority:** Critical  
 **Assignee:** Backend + Frontend Team  
@@ -345,6 +386,7 @@ Build interactive price calculator with live updates.
 Complete KYC onboarding flow for business owners.
 
 **Tasks:**
+
 - [ ] Business registration form
 - [ ] ID document upload
 - [ ] VAT certificate upload
@@ -353,6 +395,7 @@ Complete KYC onboarding flow for business owners.
 - [ ] KYC status tracking
 
 ### Issue #16: Driver Onboarding System
+
 **Type:** ✨ Feature Request  
 **Priority:** Critical  
 **Assignee:** Backend + Frontend Team  
@@ -361,6 +404,7 @@ Complete KYC onboarding flow for business owners.
 Build driver invitation and onboarding system.
 
 **Tasks:**
+
 - [ ] Driver invitation link generation
 - [ ] License upload and verification
 - [ ] Selfie + liveness check (Gemini Vision)
@@ -368,6 +412,7 @@ Build driver invitation and onboarding system.
 - [ ] Background check integration
 
 ### Issue #17: Assistant (Mover) Onboarding
+
 **Type:** ✨ Feature Request  
 **Priority:** Medium  
 **Assignee:** Backend + Frontend Team  
@@ -376,6 +421,7 @@ Build driver invitation and onboarding system.
 Create simplified onboarding for assistant movers.
 
 **Tasks:**
+
 - [ ] ID document upload
 - [ ] Basic selfie verification
 - [ ] Optional background check
@@ -383,6 +429,7 @@ Create simplified onboarding for assistant movers.
 - [ ] Assignment to drivers
 
 ### Issue #18: Real-Time GPS Tracking
+
 **Type:** ✨ Feature Request  
 **Priority:** Critical  
 **Assignee:** Mobile + Backend Team  
@@ -391,6 +438,7 @@ Create simplified onboarding for assistant movers.
 Implement live location sharing and tracking.
 
 **Tasks:**
+
 - [ ] Integrate react-native-maps
 - [ ] Set up expo-location
 - [ ] Implement Socket.IO location updates
@@ -402,6 +450,7 @@ Implement live location sharing and tracking.
 ## Additional Weeks (5-8) Issues Available Upon Request
 
 This template provides a structured approach to converting your roadmap into actionable GitHub issues. Each issue includes:
+
 - Clear descriptions and acceptance criteria
 - Priority levels and week assignments
 - Specific technical tasks

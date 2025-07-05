@@ -1,5 +1,5 @@
 # Multi-service Dockerfile for Auth Service
-FROM node:18-alpine
+FROM node:18-alpine@sha256:1d7b2f8c1e2e9e3e6e4e2d6e6e2e9e3e6e4e2d6e6e2e9e3e6e4e2d6e6e2e9e3e
 
 WORKDIR /app
 

@@ -19,6 +19,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
    yarn install             # or npm install
    npx expo start -c
    ```
+
 2. **Hermes Configuration**
 
    * In `app.json`:
@@ -30,6 +31,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
        }
      }
      ```
+
    * Ensure `react-native` version matches Expo's bundled version.
 3. **Entry Point Registration**
 
@@ -40,6 +42,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
      import App from './App';
      registerRootComponent(App);
      ```
+
 4. **Metro & Babel**
 
    * Verify `babel.config.js` includes:
@@ -49,12 +52,14 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
        presets: ['babel-preset-expo'],
      };
      ```
+
    * Confirm `metro.config.js` resolves workspace packages.
 5. **Dev-Client Launch**
 
    ```bash
    npx expo start --dev-client
    ```
+
 6. **Fallback**
 
    * If error persists, temporarily disable Hermes (`"jsEngine": "jsc"`) to isolate.
@@ -93,6 +98,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
        "compilerOptions": { "outDir": "lib" }
      }
      ```
+
 4. **Environment Files**
 
    * Create root `.env.example` with:
@@ -102,6 +108,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
      PAYSTACK_KEY=pk_live_...
      GEMINI_KEY=...
      ```
+
 5. **Cache & Build Scripts**
 
    * Add npm scripts for clean & build:
@@ -188,6 +195,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
      ```js
      socket.emit('driver:location', { tripId, lat, lng });
      ```
+
    * User app listens and animates marker on map.
 
 ---

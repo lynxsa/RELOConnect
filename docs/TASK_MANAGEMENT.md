@@ -3,6 +3,7 @@
 ## 📋 Weekly Task Boards
 
 ### Week 1: CRITICAL - App Restoration
+
 **Status:** 🔴 URGENT - In Progress  
 **Deadline:** End of Week 1  
 **Success Criteria:** Clean mobile builds on iOS/Android without Hermes/HMRClient errors
@@ -10,6 +11,7 @@
 #### Task Checklist
 
 ##### 🚨 PRIORITY 1: Cache Cleanup & Dependency Reset
+
 - [ ] **T1.1:** Remove all node_modules directories
   - **Owner:** DevOps Team
   - **Estimated:** 15 minutes
@@ -32,7 +34,7 @@
   - **Owner:** DevOps Team
   - **Estimated:** 10 minutes
   - **Status:** Ready
-  - **Commands:** 
+  - **Commands:**
     - `npm cache clean --force`
     - `yarn cache clean` (if using yarn)
     - `pnpm store prune` (if using pnpm)
@@ -44,6 +46,7 @@
   - **Command:** `npm install` (in root, backend, admin-dashboard)
 
 ##### 🚨 PRIORITY 2: Hermes Engine Configuration
+
 - [ ] **T2.1:** Configure Hermes in app.json
   - **Owner:** React Native Developer
   - **Estimated:** 30 minutes
@@ -69,6 +72,7 @@
   - **Details:** Remove jsEngine config if needed
 
 ##### 🚨 PRIORITY 3: Entry Point & Registration
+
 - [ ] **T3.1:** Verify index.js exists and is properly configured
   - **Owner:** React Native Developer
   - **Estimated:** 20 minutes
@@ -94,6 +98,7 @@
   - **Command:** `npx expo run:android`
 
 ##### 🚨 PRIORITY 4: Metro & Babel Configuration
+
 - [ ] **T4.1:** Verify metro.config.js includes proper workspace resolution
   - **Owner:** Build Engineer
   - **Estimated:** 45 minutes
@@ -119,6 +124,7 @@
   - **Details:** Resolve module resolution issues
 
 ##### 🚨 PRIORITY 5: Dev Client Testing
+
 - [ ] **T5.1:** Test Expo dev client launch
   - **Owner:** QA Engineer
   - **Estimated:** 30 minutes
@@ -147,8 +153,10 @@
 
 ### Week 1 Emergency Procedures
 
-#### If Hermes Still Fails:
+#### If Hermes Still Fails
+
 1. **Immediate Action:** Disable Hermes
+
    ```json
    // In app.json
    {
@@ -159,32 +167,39 @@
    ```
 
 2. **Alternative Approach:** Use Expo Development Build
+
    ```bash
    npx expo install expo-dev-client
    npx expo run:ios --variant debug
    ```
 
-#### If Metro Bundler Fails:
+#### If Metro Bundler Fails
+
 1. **Reset Metro Cache:**
+
    ```bash
    npx expo start --clear
    npx react-native start --reset-cache
    ```
 
 2. **Check for conflicting packages:**
+
    ```bash
    npm ls --depth=0
    # Look for duplicate React/React Native versions
    ```
 
-#### If Build Still Fails:
+#### If Build Still Fails
+
 1. **Nuclear Option - Complete Reset:**
+
    ```bash
    # Run the week1-quickstart.sh script
    ./scripts/week1-quickstart.sh
    ```
 
 2. **Create Fresh Expo Project:**
+
    ```bash
    npx create-expo-app RELOConnectTest
    # Compare configurations
@@ -195,6 +210,7 @@
 ### Week 1 Success Validation Checklist
 
 #### ✅ Build Success Criteria
+
 - [ ] `npx expo start` runs without errors
 - [ ] iOS app launches in simulator without crashes
 - [ ] Android app launches in emulator without crashes
@@ -204,12 +220,14 @@
 - [ ] Metro bundler completes without warnings
 
 #### ✅ Performance Criteria
+
 - [ ] App startup time < 3 seconds
 - [ ] Bundle size reasonable (< 50MB for dev)
 - [ ] Memory usage stable (< 200MB on device)
 - [ ] CPU usage normal during development
 
 #### ✅ Development Experience Criteria
+
 - [ ] TypeScript compilation works
 - [ ] Auto-complete works in IDE
 - [ ] Debugging tools functional
@@ -221,26 +239,31 @@
 ### Week 1 Team Daily Standups
 
 #### Monday Standup
+
 - **Goal:** Execute cache cleanup and dependency reset
 - **Blockers:** None expected
 - **Focus:** T1.1-T1.5 completion
 
 #### Tuesday Standup  
+
 - **Goal:** Configure Hermes and test performance
 - **Blockers:** Potential Hermes compatibility issues
 - **Focus:** T2.1-T2.4 completion
 
 #### Wednesday Standup
+
 - **Goal:** Fix entry points and test app launch
 - **Blockers:** Potential registration issues
 - **Focus:** T3.1-T3.4 completion
 
 #### Thursday Standup
+
 - **Goal:** Optimize Metro/Babel configuration
 - **Blockers:** Potential bundler conflicts
 - **Focus:** T4.1-T4.4 completion
 
 #### Friday Standup
+
 - **Goal:** Final testing and validation
 - **Blockers:** Any unresolved issues from earlier tasks
 - **Focus:** T5.1-T5.4 completion + Week 2 planning
@@ -250,16 +273,19 @@
 ### Week 1 Risk Assessment
 
 #### High Risk Items 🔴
+
 - **Hermes compatibility:** May need to fallback to JSC
 - **Metro configuration:** Complex monorepo setup
 - **Dependency conflicts:** Multiple package managers used
 
 #### Medium Risk Items 🟡
+
 - **Build artifacts:** Deep caching may require manual cleanup
 - **IDE integration:** TypeScript paths may need adjustment
 - **Performance:** Hermes may impact development experience
 
 #### Low Risk Items 🟢
+
 - **Entry point registration:** Well-documented pattern
 - **Cache clearing:** Standard procedure
 - **Testing:** Straightforward validation
@@ -269,16 +295,19 @@
 ### Communication Plan
 
 #### Daily Updates
+
 - **Morning:** Stand-up with progress review
 - **Afternoon:** Blocker resolution session
 - **Evening:** Next-day planning
 
 #### Escalation Process
+
 1. **Level 1:** Team lead resolution (< 2 hours)
 2. **Level 2:** Technical architect involvement (< 4 hours)
 3. **Level 3:** External expert consultation (< 24 hours)
 
 #### Documentation Requirements
+
 - All configuration changes documented
 - Issue reproduction steps recorded
 - Solution approaches documented

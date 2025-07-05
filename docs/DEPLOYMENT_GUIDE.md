@@ -5,6 +5,7 @@
 ### Infrastructure Overview
 
 #### Cloud Architecture (AWS/Azure/GCP)
+
 ```yaml
 # docker-compose.production.yml
 version: '3.8'
@@ -65,6 +66,7 @@ volumes:
 ```
 
 #### Kubernetes Deployment
+
 ```yaml
 # k8s/deployment.yaml
 apiVersion: apps/v1
@@ -125,6 +127,7 @@ spec:
 ### Environment Configuration
 
 #### Production Environment Variables
+
 ```bash
 # .env.production
 NODE_ENV=production
@@ -178,6 +181,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 ### CI/CD Pipeline
 
 #### GitHub Actions Workflow
+
 ```yaml
 # .github/workflows/deploy.yml
 name: Deploy to Production
@@ -312,6 +316,7 @@ jobs:
 ### Database Migration Strategy
 
 #### Production Migration Process
+
 ```typescript
 // scripts/migrate-production.ts
 import { PrismaClient } from '@prisma/client';
@@ -378,6 +383,7 @@ if (require.main === module) {
 ### Monitoring & Observability
 
 #### Application Monitoring
+
 ```typescript
 // src/middleware/monitoring.ts
 import { Request, Response, NextFunction } from 'express';
@@ -415,6 +421,7 @@ export const monitoringMiddleware = (req: Request, res: Response, next: NextFunc
 ```
 
 #### Health Checks
+
 ```typescript
 // src/routes/health.ts
 import express from 'express';
@@ -477,6 +484,7 @@ export default router;
 ### Performance Optimization
 
 #### Caching Strategy
+
 ```typescript
 // src/middleware/cache.ts
 import { createClient } from 'redis';
@@ -519,6 +527,7 @@ export const cacheMiddleware = (ttl: number = 300) => {
 ### Security Hardening
 
 #### Production Security Checklist
+
 - [ ] SSL/TLS certificates installed and configured
 - [ ] Security headers implemented (HSTS, CSP, etc.)
 - [ ] Rate limiting configured for all endpoints
@@ -531,6 +540,7 @@ export const cacheMiddleware = (ttl: number = 300) => {
 - [ ] Penetration testing completed
 
 #### Nginx Security Configuration
+
 ```nginx
 # nginx.conf
 server {
@@ -569,6 +579,7 @@ server {
 ### Rollback Procedures
 
 #### Emergency Rollback Plan
+
 1. **Immediate Actions** (0-5 minutes)
    - Stop accepting new traffic
    - Switch to previous container version

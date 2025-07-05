@@ -5,12 +5,14 @@
 ### Authentication & Authorization
 
 #### Multi-Factor Authentication (MFA)
+
 - **SMS OTP**: Phone number verification
 - **Email Verification**: Account confirmation
 - **Face Verification**: AI-powered biometric authentication
 - **Document Verification**: ID/License validation
 
 #### Role-Based Access Control (RBAC)
+
 ```typescript
 interface UserRole {
   id: string;
@@ -27,6 +29,7 @@ interface Permission {
 ```
 
 #### JWT Security
+
 - **Token Expiry**: Access tokens (15 min), Refresh tokens (7 days)
 - **Token Rotation**: Automatic refresh token rotation
 - **Secure Storage**: HttpOnly cookies for web, Keychain/Keystore for mobile
@@ -35,12 +38,14 @@ interface Permission {
 ### Data Protection
 
 #### Encryption Standards
+
 - **At Rest**: AES-256 encryption for sensitive data
 - **In Transit**: TLS 1.3 for all API communications
 - **Key Management**: AWS KMS / Azure Key Vault integration
 - **Database**: Transparent Data Encryption (TDE)
 
 #### Personal Data Handling
+
 ```typescript
 interface PersonalDataClassification {
   public: string[];      // Name, business name
@@ -51,6 +56,7 @@ interface PersonalDataClassification {
 ```
 
 #### Data Retention Policies
+
 - **User Data**: Retained for 7 years post-account deletion
 - **Transaction Records**: 10 years for tax compliance
 - **Biometric Data**: Deleted within 30 days if verification fails
@@ -59,6 +65,7 @@ interface PersonalDataClassification {
 ### Input Validation & Sanitization
 
 #### API Security
+
 ```typescript
 // Example validation middleware
 const validateInput = (schema: ZodSchema) => {
@@ -74,12 +81,14 @@ const validateInput = (schema: ZodSchema) => {
 ```
 
 #### File Upload Security
+
 - **File Type Validation**: MIME type and extension checking
 - **Malware Scanning**: ClamAV integration
 - **Size Limits**: 10MB per file, 50MB per request
 - **Quarantine**: Suspicious files isolated for review
 
 #### SQL Injection Prevention
+
 - **Parameterized Queries**: Prisma ORM with prepared statements
 - **Input Sanitization**: Zod validation schemas
 - **Database Permissions**: Least privilege principle
@@ -87,12 +96,14 @@ const validateInput = (schema: ZodSchema) => {
 ### Infrastructure Security
 
 #### Network Security
+
 - **WAF**: Web Application Firewall (Cloudflare/AWS WAF)
 - **DDoS Protection**: Rate limiting and traffic analysis
 - **IP Allowlisting**: Admin access restrictions
 - **VPC**: Isolated network environments
 
 #### Container Security
+
 ```dockerfile
 # Security-hardened Docker configuration
 FROM node:18-alpine AS builder
@@ -104,6 +115,7 @@ RUN npm ci --only=production
 ```
 
 #### Secrets Management
+
 - **Environment Variables**: Never commit secrets to code
 - **Secret Rotation**: Automated credential rotation
 - **Access Control**: Role-based secret access
@@ -114,6 +126,7 @@ RUN npm ci --only=production
 ### POPIA (Protection of Personal Information Act) Compliance
 
 #### Data Subject Rights
+
 1. **Right to Access**: Users can request their data
 2. **Right to Rectification**: Data correction mechanisms
 3. **Right to Erasure**: Account deletion with data purging
@@ -121,6 +134,7 @@ RUN npm ci --only=production
 5. **Right to Object**: Opt-out of processing
 
 #### Implementation
+
 ```typescript
 interface POPIACompliance {
   dataSubjectRequests: {
@@ -141,12 +155,14 @@ interface POPIACompliance {
 ### GDPR Compliance (EU Users)
 
 #### Legal Basis for Processing
+
 - **Contract Performance**: Service delivery
 - **Legitimate Interest**: Fraud prevention, security
 - **Consent**: Marketing communications
 - **Legal Obligation**: Tax records, audit trails
 
 #### Data Processing Records
+
 ```typescript
 interface ProcessingRecord {
   id: string;
@@ -162,12 +178,14 @@ interface ProcessingRecord {
 ### Financial Compliance
 
 #### PCI DSS Compliance
+
 - **Level 1 Merchant**: Annual audit requirements
 - **Secure Transmission**: End-to-end encryption
 - **Access Control**: Minimum necessary principle
 - **Regular Testing**: Vulnerability scans and penetration tests
 
 #### Banking Regulations
+
 - **FICA (Financial Intelligence Centre Act)**: Customer due diligence
 - **Anti-Money Laundering**: Transaction monitoring
 - **Know Your Customer (KYC)**: Identity verification
@@ -176,12 +194,14 @@ interface ProcessingRecord {
 ### Transport Regulation Compliance
 
 #### Road Transport Regulations
+
 - **Driver Licensing**: Valid license verification
 - **Vehicle Licensing**: Registration and roadworthiness
 - **Insurance Requirements**: Comprehensive coverage validation
 - **Load Restrictions**: Weight and dimension compliance
 
 #### Cross-Border Transport
+
 - **Customs Documentation**: Import/export permits
 - **International Standards**: ISO compliance
 - **Border Control**: Automated clearance systems
@@ -191,6 +211,7 @@ interface ProcessingRecord {
 ### Audit Trail Implementation
 
 #### Comprehensive Logging
+
 ```typescript
 interface AuditLog {
   id: string;
@@ -208,6 +229,7 @@ interface AuditLog {
 ```
 
 #### Real-Time Monitoring
+
 - **Security Events**: Failed logins, privilege escalation
 - **Data Access**: Sensitive data queries
 - **API Usage**: Rate limiting violations
@@ -216,6 +238,7 @@ interface AuditLog {
 ### Incident Response
 
 #### Security Incident Workflow
+
 1. **Detection**: Automated alerts and monitoring
 2. **Assessment**: Impact and severity evaluation
 3. **Containment**: Immediate threat isolation
@@ -224,6 +247,7 @@ interface AuditLog {
 6. **Lessons Learned**: Process improvement
 
 #### Data Breach Response
+
 - **Notification Timeline**: 72 hours to authorities
 - **User Communication**: Transparent breach disclosure
 - **Impact Assessment**: Affected data categories
@@ -232,6 +256,7 @@ interface AuditLog {
 ### Compliance Monitoring
 
 #### Automated Compliance Checks
+
 ```typescript
 interface ComplianceCheck {
   id: string;
@@ -246,6 +271,7 @@ interface ComplianceCheck {
 ```
 
 #### Regular Assessments
+
 - **Quarterly Reviews**: Compliance status evaluation
 - **Annual Audits**: Third-party compliance verification
 - **Continuous Monitoring**: Real-time compliance tracking
@@ -254,18 +280,21 @@ interface ComplianceCheck {
 ## 🛡️ Security Testing
 
 ### Penetration Testing
+
 - **Frequency**: Quarterly external, monthly internal
 - **Scope**: API endpoints, authentication, authorization
 - **Tools**: OWASP ZAP, Burp Suite, custom scripts
 - **Reporting**: Detailed findings with remediation plans
 
 ### Vulnerability Management
+
 - **Scanning**: Daily automated scans
 - **Assessment**: CVSS scoring and prioritization
 - **Patching**: 24-48 hour critical patch deployment
 - **Verification**: Post-patch vulnerability confirmation
 
 ### Security Training
+
 - **Developer Training**: Secure coding practices
 - **Staff Awareness**: Phishing and social engineering
 - **Incident Response**: Tabletop exercises
@@ -274,18 +303,21 @@ interface ComplianceCheck {
 ## 📊 Metrics & KPIs
 
 ### Security Metrics
+
 - **Mean Time to Detection (MTTD)**: < 15 minutes
 - **Mean Time to Response (MTTR)**: < 1 hour
 - **False Positive Rate**: < 5%
 - **Vulnerability Remediation**: 95% within SLA
 
 ### Compliance Metrics
+
 - **Data Subject Requests**: Response time < 30 days
 - **Consent Rates**: Tracking opt-in/opt-out percentages
 - **Audit Findings**: Reduction in non-compliance issues
 - **Training Completion**: 100% staff certification
 
 ### Privacy Metrics
+
 - **Data Minimization**: Regular data inventory reviews
 - **Retention Compliance**: Automated deletion processes
 - **Consent Management**: Granular preference tracking
