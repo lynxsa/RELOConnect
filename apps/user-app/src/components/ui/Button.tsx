@@ -10,7 +10,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
   loading?: boolean;
   disabled?: boolean;
-  icon?: React.ReactNode;
+  icon?: React.ReactElement;
   style?: ViewStyle;
   textStyle?: TextStyle;
 }

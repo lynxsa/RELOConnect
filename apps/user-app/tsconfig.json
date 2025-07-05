@@ -5,7 +5,9 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
     "target": "es2020",
-    "lib": ["es2020"],
+    "lib": [
+      "es2020"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
@@ -15,16 +17,36 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/screens/*": ["./src/screens/*"],
-      "@/services/*": ["./src/services/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/types/*": ["./src/types/*"],
-      "@/store/*": ["./src/store/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/navigation/*": ["./src/navigation/*"],
-      "@/assets/*": ["./assets/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/screens/*": [
+        "./src/screens/*"
+      ],
+      "@/services/*": [
+        "./src/services/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/navigation/*": [
+        "./src/navigation/*"
+      ],
+      "@/assets/*": [
+        "./assets/*"
+      ]
     }
   },
   "include": [
@@ -37,5 +59,6 @@
     "node_modules",
     "**/*.spec.ts",
     "**/*.test.ts"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

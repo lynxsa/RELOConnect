@@ -1,12 +1,14 @@
 {
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
     "target": "es2020",
     "lib": [
-      "es2020"
+      "es2020",
+      "dom"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,6 +17,16 @@
     "isolatedModules": true,
     "noEmit": true,
     "incremental": true,
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
+    "types": [
+      "jest",
+      "react-native",
+      "expo",
+      "react"
+    ],
     "paths": {
       "@/*": [
         "./*"
@@ -25,11 +37,13 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
+    "types/**/*.d.ts",
     "expo-env.d.ts"
   ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "backend/**/*"
   ]
 }

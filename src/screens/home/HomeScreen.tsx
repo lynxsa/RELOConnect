@@ -1,5 +1,12 @@
 import React, { useState, useRef } from 'react';
-import {
+import RN from 'react-native';
+// import { GoogleMaps } from 'expo-maps'; // Requires development build
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useBookingStore } from '../../store';
+
+const {
   View,
   Text,
   StyleSheet,
@@ -7,12 +14,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
-} from 'react-native';
-// import { GoogleMaps } from 'expo-maps'; // Requires development build
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useBookingStore } from '../../store';
+} = RN;
 import { Button, Input, Card } from '../../components/ui';
 import { Vehicle } from '../../types';
 

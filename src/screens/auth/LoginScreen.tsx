@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import {
+import RN from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useAuthStore } from '../../store';
+import { Button, Input } from '../../components/ui';
+
+const {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useAuthStore } from '../../store';
-import { Button, Input } from '../../components/ui';
+} = RN;
 
 export default function LoginScreen() {
   const { colors } = useTheme();

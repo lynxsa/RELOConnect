@@ -15,6 +15,9 @@ import portRoutes from './routes/ports';
 import paymentRoutes from './routes/payments';
 import chatRoutes from './routes/chat';
 import pricingRoutes from './routes/pricing';
+import onboardingRoutes from './routes/onboarding';
+import adminRoutes from './routes/admin';
+import aiRoutes from './routes/ai';
 
 import { setupSocketHandlers } from './socket/handlers';
 import { errorHandler } from './middleware/errorHandler';
@@ -53,6 +56,9 @@ app.use('/api/ports', portRoutes);
 app.use('/api/payments', authMiddleware, paymentRoutes);
 app.use('/api/chat', authMiddleware, chatRoutes);
 app.use('/api/pricing', pricingRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

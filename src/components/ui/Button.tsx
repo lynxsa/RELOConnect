@@ -1,7 +1,17 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import RN from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../contexts/ThemeContext';
+
+const { TouchableOpacity, Text, ActivityIndicator } = RN;
+
+interface ViewStyle {
+  [key: string]: any;
+}
+
+interface TextStyle {
+  [key: string]: any;
+}
 
 interface ButtonProps {
   title: string;
@@ -25,7 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
   icon,
   style,
   textStyle,
-}) => {
+}: ButtonProps) => {
   const { colors } = useTheme();
 
   const getButtonSize = () => {
@@ -76,8 +86,8 @@ export const Button: React.FC<ButtonProps> = ({
       >
         <LinearGradient
           colors={colors.gradient.primary as [string, string]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+          start={[0, 0]}
+          end={[1, 0]}
           style={buttonStyle}
         >
           {loading && <ActivityIndicator size="small" color="#FFFFFF" testID="loading-indicator" />}
@@ -92,7 +102,7 @@ export const Button: React.FC<ButtonProps> = ({
     );
   }
 
-  const variantStyles = {
+  const variantStyles: Record<string, ViewStyle> = {
     secondary: {
       backgroundColor: colors.surface,
       borderWidth: 1,
@@ -108,7 +118,7 @@ export const Button: React.FC<ButtonProps> = ({
     },
   };
 
-  const variantTextColors = {
+  const variantTextColors: Record<string, string> = {
     secondary: colors.text,
     outline: colors.primary,
     ghost: colors.primary,

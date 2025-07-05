@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuthStore } from '../store';
+import { useUser } from '../contexts/UserContext';
 
 // Import screens
 import SplashScreen from '../screens/SplashScreen';
@@ -14,6 +15,7 @@ import RELOCareScreen from '../screens/donations/RELOCareScreen';
 import RELONewsScreen from '../screens/news/RELONewsScreen';
 import RELOPortsScreen from '../screens/ports/RELOPortsScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
+import DriverDashboardScreen from '../screens/driver/DriverDashboardScreen';
 
 // Booking screens
 import ServiceExtrasScreen from '../screens/booking/ServiceExtrasScreen';
@@ -31,6 +33,7 @@ const MainTab = createBottomTabNavigator<MainTabParamList>();
 
 const MainTabNavigator = () => {
   const { colors } = useTheme();
+  const { isDriverMode, user } = useUser();
 
   return (
     <MainTab.Navigator
@@ -38,24 +41,48 @@ const MainTabNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
 
-          switch (route.name) {
-            case 'Home':
-              iconName = focused ? 'home' : 'home-outline';
-              break;
-            case 'RELOCare':
-              iconName = focused ? 'heart' : 'heart-outline';
-              break;
-            case 'RELONews':
-              iconName = focused ? 'newspaper' : 'newspaper-outline';
-              break;
-            case 'RELOPorts':
-              iconName = focused ? 'boat' : 'boat-outline';
-              break;
-            case 'Profile':
-              iconName = focused ? 'person' : 'person-outline';
-              break;
-            default:
-              iconName = 'home-outline';
+          if (isDriverMode) {
+            // Driver mode icons
+            switch (route.name) {
+              case 'Home':
+                iconName = focused ? 'speedometer' : 'speedometer-outline';
+                break;
+              case 'RELOCare':
+                iconName = focused ? 'list' : 'list-outline';
+                break;
+              case 'RELONews':
+                iconName = focused ? 'wallet' : 'wallet-outline';
+                break;
+              case 'RELOPorts':
+                iconName = focused ? 'analytics' : 'analytics-outline';
+                break;
+              case 'Profile':
+                iconName = focused ? 'person' : 'person-outline';
+                break;
+              default:
+                iconName = 'speedometer-outline';
+            }
+          } else {
+            // User mode icons (original)
+            switch (route.name) {
+              case 'Home':
+                iconName = focused ? 'home' : 'home-outline';
+                break;
+              case 'RELOCare':
+                iconName = focused ? 'heart' : 'heart-outline';
+                break;
+              case 'RELONews':
+                iconName = focused ? 'newspaper' : 'newspaper-outline';
+                break;
+              case 'RELOPorts':
+                iconName = focused ? 'boat' : 'boat-outline';
+                break;
+              case 'Profile':
+                iconName = focused ? 'person' : 'person-outline';
+                break;
+              default:
+                iconName = 'home-outline';
+            }
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;

@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuthStore } from '../../store';
+import { useUser } from '../../contexts/UserContext';
 import { Card, Button } from '../../components/ui';
 
 export default function ProfileScreen() {
   const { colors } = useTheme();
   const { user, logout } = useAuthStore();
+  const { isDriverMode, toggleDriverMode, canBeDriver } = useUser();
 
   const handleLogout = () => {
     Alert.alert(
@@ -16,6 +18,27 @@ export default function ProfileScreen() {
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Logout', onPress: logout, style: 'destructive' },
+      ]
+    );
+  };
+
+  const handleDriverModeToggle = () => {
+    if (!canBeDriver) {
+      Alert.alert(
+        'Driver Mode Not Available',
+        'You need to complete driver verification to access driver mode. Contact support for more information.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+    
+    const newMode = !isDriverMode;
+    Alert.alert(
+      `Switch to ${newMode ? 'Driver' : 'User'} Mode`,
+      `Are you sure you want to switch to ${newMode ? 'driver' : 'user'} mode? This will change your interface and available features.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Switch', onPress: () => toggleDriverMode(), style: 'default' },
       ]
     );
   };
@@ -47,6 +70,46 @@ export default function ProfileScreen() {
         <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
           {user?.email}
         </Text>
+        
+        {/* Role Switch Section */}
+        <View style={styles.roleSwitchContainer}>
+          <View style={styles.currentModeContainer}>
+            <Ionicons 
+              name={isDriverMode ? 'car' : 'person'} 
+              size={20} 
+              color={colors.primary} 
+            />
+            <Text style={[styles.currentModeText, { color: colors.text }]}>
+              Current Mode: {isDriverMode ? 'Driver' : 'User'}
+            </Text>
+          </View>
+          
+          {canBeDriver && (
+            <TouchableOpacity 
+              style={[styles.modeToggle, { backgroundColor: colors.surface }]}
+              onPress={handleDriverModeToggle}
+            >
+              <Text style={[styles.modeToggleText, { color: colors.text }]}>
+                Switch to {isDriverMode ? 'User' : 'Driver'} Mode
+              </Text>
+              <Switch 
+                value={isDriverMode}
+                onValueChange={handleDriverModeToggle}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor={colors.surface}
+              />
+            </TouchableOpacity>
+          )}
+          
+          {!canBeDriver && (
+            <TouchableOpacity 
+              style={[styles.becomeDriverButton, { backgroundColor: colors.primary }]}
+              onPress={() => Alert.alert('Become a Driver', 'Contact support to start your driver verification process.')}
+            >
+              <Text style={styles.becomeDriverText}>Become a Driver</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
@@ -154,6 +217,45 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 14,
     marginBottom: 20,
+  },
+  roleSwitchContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 16,
+  },
+  currentModeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  currentModeText: {
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  modeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    width: '100%',
+  },
+  modeToggleText: {
+    fontSize: 16,
+    flex: 1,
+  },
+  becomeDriverButton: {
+    marginTop: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  becomeDriverText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   statsContainer: {
     flexDirection: 'row',

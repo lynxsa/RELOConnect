@@ -1,0 +1,1267 @@
+openapi: 3.0.3
+info:
+  title: RELOConnect Secure Onboarding API
+  description: |
+    Comprehensive KYC/KYB onboarding system with AI integration for RELOConnect's 
+    multi-role logistics platform. Supports Owners, Drivers, Assistants, and Users 
+    with strict compliance and security measures.
+  version: 2.0.0
+  contact:
+    name: RELOConnect API Team
+    email: api@reloconnect.co.za
+    url: https://reloconnect.co.za
+  license:
+    name: Proprietary
+    url: https://reloconnect.co.za/license
+
+servers:
+  - url: https://api.reloconnect.co.za/v2
+    description: Production server
+  - url: https://staging-api.reloconnect.co.za/v2
+    description: Staging server
+  - url: http://localhost:3001/v2
+    description: Development server
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+
+paths:
+  # ===== OWNER ONBOARDING (KYB) =====
+  
+  /owner/onboard:
+    post:
+      tags: ["Owner Onboarding"]
+      summary: Initialize owner onboarding process (KYB)
+      description: |
+        Start the KYB (Know Your Business) process for truck owners.
+        Creates owner profile and generates invite codes for drivers.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerOnboardingRequest'
+      responses:
+        '201':
+          description: Owner profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerOnboardingResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /owner/upload-id:
+    post:
+      tags: ["Owner Onboarding"]
+      summary: Upload owner identification documents
+      description: |
+        Upload government-issued ID documents with OCR extraction.
+        Supports SA ID books, smart cards, and passports.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ownerId:
+                  type: string
+                  format: uuid
+                idFront:
+                  type: string
+                  format: binary
+                  description: Front side of ID document
+                idBack:
+                  type: string
+                  format: binary
+                  description: Back side of ID document (if applicable)
+              required: [ownerId, idFront]
+      responses:
+        '200':
+          description: Documents uploaded and processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentUploadResponse'
+
+  /owner/upload-ubo:
+    post:
+      tags: ["Owner Onboarding"]
+      summary: Upload Ultimate Beneficial Owner documents
+      description: |
+        Upload UBO documentation for corporate entities.
+        Required for companies with complex ownership structures.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ownerId:
+                  type: string
+                  format: uuid
+                cipcDocuments:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                uboDeclarations:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+  /owner/verify-face:
+    post:
+      tags: ["Owner Onboarding"]
+      summary: Perform face verification (optional for owners)
+      description: |
+        Optional biometric verification for owners using Gemini Vision.
+        Includes liveness detection and face matching.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ownerId:
+                  type: string
+                  format: uuid
+                selfie:
+                  type: string
+                  format: binary
+                  description: High-quality selfie for face verification
+              required: [ownerId, selfie]
+      responses:
+        '200':
+          description: Face verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaceVerificationResponse'
+
+  # ===== TRUCK REGISTRATION =====
+  
+  /truck/register:
+    post:
+      tags: ["Truck Management"]
+      summary: Register a new truck
+      description: |
+        Register a truck under an owner's fleet.
+        Requires valid ownership documentation.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TruckRegistrationRequest'
+      responses:
+        '201':
+          description: Truck registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TruckRegistrationResponse'
+
+  /truck/upload-docs:
+    post:
+      tags: ["Truck Management"]
+      summary: Upload truck documentation
+      description: |
+        Upload required truck documents: license disc, insurance, roadworthiness.
+        System tracks expiry dates and sends renewal reminders.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                truckId:
+                  type: string
+                  format: uuid
+                licenseDisc:
+                  type: string
+                  format: binary
+                insuranceCert:
+                  type: string
+                  format: binary
+                roadWorthiness:
+                  type: string
+                  format: binary
+              required: [truckId]
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+  # ===== DRIVER ONBOARDING (KYC) =====
+  
+  /driver/invite:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Send driver invitation
+      description: |
+        Owner sends invitation link to potential driver.
+        Creates secure invite token with expiry.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                name:
+                  type: string
+                message:
+                  type: string
+                  description: Optional personal message
+              required: [email, name]
+      responses:
+        '200':
+          description: Invitation sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inviteToken:
+                    type: string
+                  expiresAt:
+                    type: string
+                    format: date-time
+                  inviteUrl:
+                    type: string
+
+  /driver/onboard:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Complete driver onboarding
+      description: |
+        Driver completes personal information using invite token.
+        Starts KYC verification process.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverOnboardingRequest'
+      responses:
+        '201':
+          description: Driver profile created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverOnboardingResponse'
+
+  /driver/upload-license:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Upload driver's license
+      description: |
+        Upload driver's license with OCR verification.
+        Validates license status and extracts key information.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                driverId:
+                  type: string
+                  format: uuid
+                licenseFront:
+                  type: string
+                  format: binary
+                licenseBack:
+                  type: string
+                  format: binary
+              required: [driverId, licenseFront, licenseBack]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseVerificationResponse'
+
+  /driver/verify-face:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Mandatory face verification for drivers
+      description: |
+        Required biometric verification using Gemini Vision.
+        Includes liveness detection and anti-spoofing measures.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                driverId:
+                  type: string
+                  format: uuid
+                selfie:
+                  type: string
+                  format: binary
+              required: [driverId, selfie]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaceVerificationResponse'
+
+  /driver/assign-truck:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Assign truck to driver
+      description: |
+        Assign a specific truck to a verified driver.
+        One-to-one relationship enforced.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                driverId:
+                  type: string
+                  format: uuid
+                truckId:
+                  type: string
+                  format: uuid
+              required: [driverId, truckId]
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+  /driver/upload-bank-info:
+    post:
+      tags: ["Driver Onboarding"]
+      summary: Upload banking information
+      description: |
+        Secure upload of banking details for payouts.
+        Encrypted storage with bank account verification.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankInfoRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+  # ===== ASSISTANT ONBOARDING =====
+  
+  /assistant/onboard:
+    post:
+      tags: ["Assistant Onboarding"]
+      summary: Onboard moving assistant
+      description: |
+        Register moving assistant under owner or driver.
+        Less stringent verification than drivers.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssistantOnboardingRequest'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistantOnboardingResponse'
+
+  # ===== USER ONBOARDING =====
+  
+  /user/signup:
+    post:
+      tags: ["User Onboarding"]
+      summary: Register new customer
+      description: |
+        Simple customer registration for booking services.
+        Email/phone verification required.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignupRequest'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignupResponse'
+
+  /user/verify-id:
+    post:
+      tags: ["User Onboarding"]
+      summary: Optional ID verification for high-value bookings
+      description: |
+        Triggered for bookings >R10,000.
+        Enhanced trust and fraud prevention.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                idDocument:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentUploadResponse'
+
+  /user/verify-face:
+    post:
+      tags: ["User Onboarding"]
+      summary: Optional face verification for premium users
+      description: |
+        Biometric verification for high-value customer accounts.
+        Unlocks premium features and higher booking limits.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                selfie:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaceVerificationResponse'
+
+  # ===== AI INTEGRATION ENDPOINTS =====
+  
+  /ai/parse-booking:
+    post:
+      tags: ["AI Services"]
+      summary: Parse natural language booking request
+      description: |
+        Use Gemini to parse user's natural language input into structured booking data.
+        Extracts locations, dates, items, special requirements.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userInput:
+                  type: string
+                  description: Natural language booking description
+                  example: "I need to move my 3-bedroom house from Sandton to Pretoria next Friday. I have a piano and some fragile items."
+                context:
+                  type: object
+                  description: Additional context (user location, preferences)
+              required: [userInput]
+      responses:
+        '200':
+          description: Parsed booking data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParsedBookingResponse'
+
+  /ai/recommend-truck:
+    post:
+      tags: ["AI Services"]
+      summary: AI truck recommendation
+      description: |
+        Analyze booking requirements and recommend optimal truck.
+        Considers capacity, location, availability, cost.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TruckRecommendationRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TruckRecommendationResponse'
+
+  /ai/predict-eta:
+    post:
+      tags: ["AI Services"]
+      summary: Predict ETA and optimize pricing
+      description: |
+        AI-driven ETA prediction and dynamic pricing.
+        Considers traffic, weather, driver patterns, demand.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ETAPredictionRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ETAPredictionResponse'
+
+  /ai/verify-face:
+    post:
+      tags: ["AI Services"]
+      summary: Gemini-powered face verification
+      description: |
+        Advanced face verification using Google Gemini Vision.
+        Includes liveness detection, anti-spoofing, quality assessment.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                entityId:
+                  type: string
+                  format: uuid
+                entityType:
+                  type: string
+                  enum: [owner, driver, assistant, user]
+                selfie:
+                  type: string
+                  format: binary
+                referenceImage:
+                  type: string
+                  format: binary
+                  description: Optional reference image for comparison
+              required: [entityId, entityType, selfie]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaceVerificationResponse'
+
+  # ===== ADMIN ENDPOINTS =====
+  
+  /admin/kyc/review/{entityType}/{entityId}:
+    get:
+      tags: ["Admin KYC"]
+      summary: Get KYC review details
+      description: Admin review of KYC/KYB submissions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: entityType
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [owner, driver, assistant, user]
+        - name: entityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KYCReviewResponse'
+
+    patch:
+      tags: ["Admin KYC"]
+      summary: Update KYC status
+      description: Approve, reject, or request additional documents
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: entityType
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [owner, driver, assistant, user]
+        - name: entityId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KYCStatusUpdateRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    # ===== ONBOARDING REQUEST SCHEMAS =====
+    
+    OwnerOnboardingRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        businessName:
+          type: string
+          minLength: 2
+          maxLength: 200
+        regNumber:
+          type: string
+          pattern: '^[0-9]{4}/[0-9]{6}/[0-9]{2}$'
+          description: Company registration number
+        vatNumber:
+          type: string
+          pattern: '^[0-9]{10}$'
+          description: VAT registration number
+        contactInfo:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            phone:
+              type: string
+              pattern: '^(\+27|0)[0-9]{9}$'
+            address:
+              $ref: '#/components/schemas/Address'
+          required: [email, phone, address]
+      required: [name, contactInfo]
+
+    DriverOnboardingRequest:
+      type: object
+      properties:
+        inviteToken:
+          type: string
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: '^(\+27|0)[0-9]{9}$'
+        dob:
+          type: string
+          format: date
+        licenseNumber:
+          type: string
+          minLength: 8
+          maxLength: 15
+      required: [inviteToken, name, email, phone, dob, licenseNumber]
+
+    TruckRegistrationRequest:
+      type: object
+      properties:
+        plate:
+          type: string
+          pattern: '^[A-Z]{2,3}\s[0-9]{3,4}\s[A-Z]{2,3}$'
+        makeModel:
+          type: string
+        capacityTons:
+          type: number
+          minimum: 0.5
+          maximum: 50
+        gpsDeviceId:
+          type: string
+      required: [plate, makeModel, capacityTons]
+
+    UserSignupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: '^(\+27|0)[0-9]{9}$'
+      required: [name, email, phone]
+
+    AssistantOnboardingRequest:
+      type: object
+      properties:
+        parentId:
+          type: string
+          format: uuid
+        parentType:
+          type: string
+          enum: [OWNER, DRIVER]
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: '^(\+27|0)[0-9]{9}$'
+      required: [parentId, parentType, name, phone]
+
+    BankInfoRequest:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          minLength: 8
+          maxLength: 11
+        bankCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        accountHolder:
+          type: string
+        accountType:
+          type: string
+          enum: [SAVINGS, CURRENT]
+      required: [accountNumber, bankCode, accountHolder, accountType]
+
+    # ===== AI REQUEST SCHEMAS =====
+    
+    TruckRecommendationRequest:
+      type: object
+      properties:
+        pickupLocation:
+          $ref: '#/components/schemas/Location'
+        dropoffLocation:
+          $ref: '#/components/schemas/Location'
+        items:
+          type: array
+          items:
+            type: string
+        estimatedWeight:
+          type: number
+        preferredDate:
+          type: string
+          format: date-time
+        budget:
+          type: number
+      required: [pickupLocation, dropoffLocation, items]
+
+    ETAPredictionRequest:
+      type: object
+      properties:
+        route:
+          type: object
+          properties:
+            from:
+              $ref: '#/components/schemas/Location'
+            to:
+              $ref: '#/components/schemas/Location'
+            waypoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/Location'
+        truckType:
+          type: string
+        scheduledTime:
+          type: string
+          format: date-time
+        trafficData:
+          type: object
+        weatherData:
+          type: object
+      required: [route, truckType, scheduledTime]
+
+    KYCStatusUpdateRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [VERIFIED, REJECTED, DOCUMENTS_REQUIRED]
+        reason:
+          type: string
+          description: Reason for rejection or document request
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+        adminNotes:
+          type: string
+      required: [status]
+
+    # ===== RESPONSE SCHEMAS =====
+    
+    OwnerOnboardingResponse:
+      type: object
+      properties:
+        ownerId:
+          type: string
+          format: uuid
+        kycStatus:
+          type: string
+          enum: [PENDING, DOCUMENTS_REQUIRED, UNDER_REVIEW, VERIFIED, REJECTED]
+        nextSteps:
+          type: array
+          items:
+            type: string
+        inviteCode:
+          type: string
+          description: Code for inviting drivers
+
+    DriverOnboardingResponse:
+      type: object
+      properties:
+        driverId:
+          type: string
+          format: uuid
+        kycStatus:
+          type: string
+        nextSteps:
+          type: array
+          items:
+            type: string
+
+    TruckRegistrationResponse:
+      type: object
+      properties:
+        truckId:
+          type: string
+          format: uuid
+        status:
+          type: string
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+
+    UserSignupResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        verificationLevel:
+          type: string
+          enum: [BASIC, VERIFIED, PREMIUM]
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+
+    AssistantOnboardingResponse:
+      type: object
+      properties:
+        assistantId:
+          type: string
+          format: uuid
+        vettingStatus:
+          type: string
+        nextSteps:
+          type: array
+          items:
+            type: string
+
+    DocumentUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        extractedData:
+          type: object
+          description: OCR extracted information
+        verificationStatus:
+          type: string
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    FaceVerificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        matchScore:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Face matching confidence
+        livenessScore:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Liveness detection confidence
+        qualityScore:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Image quality assessment
+        passed:
+          type: boolean
+          description: Whether verification passed threshold
+        sessionId:
+          type: string
+          description: Verification session ID for audit
+
+    LicenseVerificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        extractedData:
+          type: object
+          properties:
+            licenseNumber:
+              type: string
+            expiryDate:
+              type: string
+              format: date
+            licenseType:
+              type: string
+            restrictions:
+              type: array
+              items:
+                type: string
+        verificationStatus:
+          type: string
+          enum: [VALID, EXPIRED, SUSPENDED, INVALID]
+
+    ParsedBookingResponse:
+      type: object
+      properties:
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        extractedData:
+          type: object
+          properties:
+            pickupLocation:
+              type: string
+            dropoffLocation:
+              type: string
+            preferredDate:
+              type: string
+            items:
+              type: array
+              items:
+                type: string
+            specialRequirements:
+              type: array
+              items:
+                type: string
+            estimatedSize:
+              type: string
+              enum: [SMALL, MEDIUM, LARGE, EXTRA_LARGE]
+        suggestedActions:
+          type: array
+          items:
+            type: string
+
+    TruckRecommendationResponse:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              truckId:
+                type: string
+                format: uuid
+              matchScore:
+                type: number
+              estimatedPrice:
+                type: number
+              availability:
+                type: string
+              distance:
+                type: number
+              reasons:
+                type: array
+                items:
+                  type: string
+
+    ETAPredictionResponse:
+      type: object
+      properties:
+        estimatedDuration:
+          type: integer
+          description: Duration in minutes
+        suggestedPrice:
+          type: number
+        confidence:
+          type: number
+        factors:
+          type: object
+          properties:
+            traffic:
+              type: string
+            weather:
+              type: string
+            demand:
+              type: string
+        alternativeRoutes:
+          type: array
+          items:
+            type: object
+
+    KYCReviewResponse:
+      type: object
+      properties:
+        entityId:
+          type: string
+          format: uuid
+        entityType:
+          type: string
+        currentStatus:
+          type: string
+        documents:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+              uploadedAt:
+                type: string
+                format: date-time
+              verified:
+                type: boolean
+        faceVerification:
+          $ref: '#/components/schemas/FaceVerificationResponse'
+        riskAssessment:
+          type: object
+          properties:
+            score:
+              type: number
+            factors:
+              type: array
+              items:
+                type: string
+        auditTrail:
+          type: array
+          items:
+            type: object
+
+    # ===== COMMON SCHEMAS =====
+    
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        postalCode:
+          type: string
+          pattern: '^[0-9]{4}$'
+        country:
+          type: string
+          default: "ZA"
+      required: [street, city, province, postalCode]
+
+    Location:
+      type: object
+      properties:
+        address:
+          type: string
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        placeId:
+          type: string
+          description: Google Places ID
+      required: [address, latitude, longitude]
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+      required: [code, message, timestamp]
+
+  responses:
+    SuccessResponse:
+      description: Operation completed successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: "VALIDATION_ERROR"
+                  validationErrors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                        message:
+                          type: string
+
+    ConflictError:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: "RESOURCE_EXISTS"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: "NOT_FOUND"
+
+    UnauthorizedError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: "UNAUTHORIZED"
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: "FORBIDDEN"
+
+tags:
+  - name: Owner Onboarding
+    description: KYB process for truck owners
+  - name: Driver Onboarding  
+    description: KYC process for drivers
+  - name: Assistant Onboarding
+    description: Vetting process for moving assistants
+  - name: User Onboarding
+    description: Customer registration and verification
+  - name: Truck Management
+    description: Vehicle registration and documentation
+  - name: AI Services
+    description: Gemini-powered intelligent features
+  - name: Admin KYC
+    description: Administrative review and approval processes

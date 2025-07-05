@@ -35,6 +35,7 @@ RELOConnect is a comprehensive, production-ready relocation platform built as a 
 ## 🛠️ Tech Stack
 
 ### Frontend (Mobile App)
+
 - **React Native** with Expo SDK 53
 - **TypeScript** for type safety
 - **NativeWind** (Tailwind CSS for React Native)
@@ -46,6 +47,7 @@ RELOConnect is a comprehensive, production-ready relocation platform built as a 
 - **Expo Linear Gradient** for UI gradients
 
 ### Backend API
+
 - **Node.js** with Express.js
 - **TypeScript**
 - **Prisma ORM** with PostgreSQL
@@ -56,6 +58,7 @@ RELOConnect is a comprehensive, production-ready relocation platform built as a 
 - **Helmet** for security
 
 ### Database
+
 - **PostgreSQL** with Prisma ORM
 - Comprehensive schema for all modules
 - Real-time data synchronization
@@ -63,18 +66,21 @@ RELOConnect is a comprehensive, production-ready relocation platform built as a 
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary:** Electric Blue (#0057FF)
 - **Secondary:** Light Blue (#00B2FF)
 - **Gradients:** Blue-to-blue transitions
 - **Supporting:** Success, warning, error colors
 
 ### Typography
+
 - **H1:** 32pt, bold
 - **H2:** 24pt, semi-bold
 - **Body:** 16pt, regular
 - **Caption:** 12pt, regular
 
 ### Components
+
 - **Buttons:** 44-50px height, gradient backgrounds
 - **Inputs:** 48px height, rounded corners
 - **Cards:** Elevated with shadows, rounded corners
@@ -123,7 +129,8 @@ RELOConnect/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 - Expo CLI
 - PostgreSQL database
@@ -133,23 +140,27 @@ RELOConnect/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd RELOConnect
    ```
 
 2. **Install mobile app dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Install backend dependencies**
+
    ```bash
    cd backend
    npm install
    ```
 
 4. **Set up environment variables**
+
    ```bash
    # Backend (.env)
    DATABASE_URL="postgresql://username:password@localhost:5432/reloconnect"
@@ -159,6 +170,7 @@ RELOConnect/
    ```
 
 5. **Set up the database**
+
    ```bash
    cd backend
    npx prisma migrate dev
@@ -168,12 +180,14 @@ RELOConnect/
 6. **Start the development servers**
 
    Backend:
+
    ```bash
    cd backend
    npm run dev
    ```
 
    Mobile app:
+
    ```bash
    npm start
    ```
@@ -222,6 +236,7 @@ npm run studio
 ## 🔄 Key Features Implementation
 
 ### 1. Booking Flow
+
 1. User selects pickup and dropoff locations
 2. System calculates distance and pricing
 3. User chooses vehicle type and extras
@@ -230,18 +245,21 @@ npm run studio
 6. Completion and rating
 
 ### 2. Real-time Tracking
+
 - Socket.IO for live location updates
 - Google Maps integration
 - Driver-user communication
 - Status updates and notifications
 
 ### 3. Payment Integration
+
 - Stripe for card payments
 - Yoco for local payments
 - Apple Pay / Google Pay support
 - Secure payment processing
 
 ### 4. Community Features
+
 - Item donation listings
 - Request and collection system
 - Photo uploads and descriptions
@@ -250,6 +268,7 @@ npm run studio
 ## 🎯 Roadmap
 
 ### Phase 1: MVP (Current)
+
 - [x] Core booking functionality
 - [x] User authentication
 - [x] Basic payment processing
@@ -257,12 +276,14 @@ npm run studio
 - [x] Driver interface
 
 ### Phase 2: Enhanced Features
+
 - [ ] Advanced analytics
 - [ ] Push notifications
 - [ ] Multi-language support
 - [ ] Advanced matching algorithms
 
 ### Phase 3: Business Expansion
+
 - [ ] B2B enterprise features
 - [ ] Fleet management
 - [ ] Advanced reporting

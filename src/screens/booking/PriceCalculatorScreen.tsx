@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {
+import RN from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../contexts/ThemeContext';
+import { Button, Input, Card } from '../../components/ui';
+
+const {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Alert,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Button, Input, Card } from '../../components/ui';
+} = RN;
 
 // Mock data for testing
 const mockVehicleTypes = [

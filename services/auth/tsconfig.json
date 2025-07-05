@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noEmit": false,
+    "module": "CommonJS",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@reloconnect/shared": ["../../libs/shared/dist"],
+      "@/*": ["./src/*"]
+    },
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

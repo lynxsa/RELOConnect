@@ -1,5 +1,4 @@
-import express from 'express';
-import { Request, Response } from 'express';
+import express, { Request, Response, RequestHandler } from 'express';
 import { PricingRequest, PricingResponse, VEHICLE_CLASSES, APP_CONFIG } from '@reloconnect/shared';
 import { logger } from '../utils/logger';
 
@@ -9,32 +8,35 @@ const router = express.Router();
  * POST /pricing/calculate
  * Calculate pricing for a booking request
  */
-router.post('/calculate', async (req: Request, res: Response) => {
+const calculatePricingHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const { distanceKm, vehicleClassId, extraServices, scheduledDateTime }: PricingRequest = req.body;
 
     // Validate input
     if (!distanceKm || !vehicleClassId || !extraServices) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Missing required fields: distanceKm, vehicleClassId, extraServices'
       });
+      return;
     }
 
     if (distanceKm < APP_CONFIG.MIN_BOOKING_DISTANCE || distanceKm > APP_CONFIG.MAX_BOOKING_DISTANCE) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: `Distance must be between ${APP_CONFIG.MIN_BOOKING_DISTANCE}km and ${APP_CONFIG.MAX_BOOKING_DISTANCE}km`
       });
+      return;
     }
 
-    // Get vehicle class details
+    // Get vehicle class details with proper typing
     const vehicleClass = Object.values(VEHICLE_CLASSES).find(vc => vc.id === vehicleClassId);
     if (!vehicleClass) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Invalid vehicle class ID'
       });
+      return;
     }
 
     // Calculate base fare
@@ -171,12 +173,11 @@ router.post('/calculate', async (req: Request, res: Response) => {
     };
 
     logger.info(`Pricing calculated for ${vehicleClassId}, ${distanceKm}km: R${total}`);
-
+    
     res.json({
       success: true,
       data: response
     });
-
   } catch (error) {
     logger.error('Pricing calculation error:', error);
     res.status(500).json({
@@ -184,13 +185,15 @@ router.post('/calculate', async (req: Request, res: Response) => {
       error: 'Internal server error'
     });
   }
-});
+};
+
+router.post('/calculate', calculatePricingHandler);
 
 /**
  * GET /pricing/vehicle-classes
  * Get available vehicle classes with pricing
  */
-router.get('/vehicle-classes', (req: Request, res: Response) => {
+const getVehicleClassesHandler: RequestHandler = (req: Request, res: Response): void => {
   try {
     const vehicleClasses = Object.values(VEHICLE_CLASSES).map(vc => ({
       ...vc,
@@ -209,29 +212,33 @@ router.get('/vehicle-classes', (req: Request, res: Response) => {
       error: 'Internal server error'
     });
   }
-});
+};
+
+router.get('/vehicle-classes', getVehicleClassesHandler);
 
 /**
  * POST /pricing/estimate
  * Quick pricing estimate without full booking details
  */
-router.post('/estimate', (req: Request, res: Response) => {
+const getPricingEstimateHandler: RequestHandler = (req: Request, res: Response): void => {
   try {
     const { distanceKm, vehicleClassId } = req.body;
 
     if (!distanceKm || !vehicleClassId) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Distance and vehicle class are required'
       });
+      return;
     }
 
     const vehicleClass = Object.values(VEHICLE_CLASSES).find(vc => vc.id === vehicleClassId);
     if (!vehicleClass) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Invalid vehicle class ID'
       });
+      return;
     }
 
     const baseFare = vehicleClass.basePrice;
@@ -260,6 +267,8 @@ router.post('/estimate', (req: Request, res: Response) => {
       error: 'Internal server error'
     });
   }
-});
+};
+
+router.post('/estimate', getPricingEstimateHandler);
 
 export { router as pricingRoutes };
