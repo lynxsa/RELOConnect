@@ -23,12 +23,17 @@ interface ExtraServices {
   insurance: boolean;
   insuranceValue?: number;
   waitingTime?: number; // in 15-min blocks
+  security?: boolean;
+  customs?: boolean;
 }
 
 interface PriceEstimateRequest {
   distance: number;
   vehicleClassId: string;
   extraServices: ExtraServices;
+  provinceFrom?: string;
+  provinceTo?: string;
+  terrainType?: string; // urban, peri-urban, rural, mountain
 }
 
 interface PriceBreakdown {
@@ -41,8 +46,12 @@ interface PriceBreakdown {
     express: number;
     insurance: number;
     waitingTime: number;
+    security?: number;
+    customs?: number;
   };
   total: number;
+  adjustedTotal?: number;
+  adjustments?: Record<string, number>;
 }
 
 /**
@@ -111,6 +120,12 @@ export async function calculatePriceEstimate(request: PriceEstimateRequest): Pro
         : 0,
       waitingTime: (request.extraServices.waitingTime || 0) > 0 
         ? (EXTRA_SERVICES.find(s => s.code === 'WAITING')?.price || 100) * (request.extraServices.waitingTime || 0)
+        : 0,
+      security: request.extraServices.security 
+        ? (EXTRA_SERVICES.find(s => s.code === 'SECURITY')?.price || 750)
+        : 0,
+      customs: request.extraServices.customs 
+        ? (EXTRA_SERVICES.find(s => s.code === 'CUSTOMS')?.price || 1200)
         : 0
     };
 
@@ -118,11 +133,29 @@ export async function calculatePriceEstimate(request: PriceEstimateRequest): Pro
     const totalExtras = Object.values(extras).reduce((sum, cost) => sum + cost, 0);
     const totalPrice = pricingRate.baseFare + totalExtras;
 
-    // 5. Return the price breakdown
+    // 5. Apply South African specific adjustments
+    let adjustedPrice = totalPrice;
+    let adjustmentDetails = {};
+    
+    if (request.provinceFrom || request.provinceTo || request.terrainType) {
+      const adjustmentResult = await calculateAdjustedPrice(
+        totalPrice,
+        request.provinceFrom,
+        request.provinceTo,
+        request.terrainType
+      );
+      
+      adjustedPrice = adjustmentResult.adjustedPrice;
+      adjustmentDetails = adjustmentResult.adjustments;
+    }
+
+    // 6. Return the price breakdown with adjustments
     return {
       baseFare: pricingRate.baseFare,
       extras,
-      total: totalPrice
+      total: totalPrice,
+      adjustedTotal: adjustedPrice,
+      adjustments: adjustmentDetails
     };
   } catch (error) {
     console.error('Error calculating price estimate:', error);
@@ -150,4 +183,111 @@ export function calculateDistance(origin: Location, destination: Location): numb
 
 function deg2rad(deg: number): number {
   return deg * (Math.PI/180);
+}
+
+/**
+ * Get the current active fuel surcharge
+ * @returns The active fuel surcharge or null if none is active
+ */
+export async function getActiveFuelSurcharge(): Promise<any> {
+  try {
+    const currentDate = new Date();
+    
+    const activeSurcharge = await prisma.fuelSurcharge.findFirst({
+      where: {
+        isActive: true,
+        effectiveFrom: {
+          lte: currentDate
+        },
+        OR: [
+          { effectiveTo: null },
+          { effectiveTo: { gte: currentDate } }
+        ]
+      },
+      orderBy: {
+        effectiveFrom: 'desc'
+      }
+    });
+    
+    return activeSurcharge;
+  } catch (error) {
+    console.error('Error getting active fuel surcharge:', error);
+    return null;
+  }
+}
+
+/**
+ * Get provincial adjustment factor for a specific province
+ * @param province The name of the South African province
+ * @returns The adjustment factor (e.g., 1.05 for 5% increase)
+ */
+export async function getProvincialAdjustment(province: string): Promise<number> {
+  try {
+    const adjustment = await prisma.provincialAdjustment.findFirst({
+      where: { province }
+    });
+    
+    return adjustment ? adjustment.adjustment : 1.0; // Default to no adjustment
+  } catch (error) {
+    console.error('Error getting provincial adjustment:', error);
+    return 1.0; // Default to no adjustment on error
+  }
+}
+
+/**
+ * Calculate price with all South African specific adjustments
+ */
+export async function calculateAdjustedPrice(
+  basePrice: number,
+  provinceFrom?: string,
+  provinceTo?: string,
+  terrainType?: string
+): Promise<{ adjustedPrice: number, adjustments: Record<string, number> }> {
+  const adjustments: Record<string, number> = {};
+  let finalPrice = basePrice;
+  
+  // Apply provincial adjustments if provinces are specified
+  if (provinceFrom) {
+    const fromAdjustment = await getProvincialAdjustment(provinceFrom);
+    if (fromAdjustment !== 1.0) {
+      adjustments.provinceFrom = fromAdjustment;
+      finalPrice *= fromAdjustment;
+    }
+  }
+  
+  if (provinceTo) {
+    const toAdjustment = await getProvincialAdjustment(provinceTo);
+    if (toAdjustment !== 1.0) {
+      adjustments.provinceTo = toAdjustment;
+      finalPrice *= toAdjustment;
+    }
+  }
+  
+  // Apply fuel surcharge
+  const fuelSurcharge = await getActiveFuelSurcharge();
+  if (fuelSurcharge) {
+    adjustments.fuelSurcharge = 1 + fuelSurcharge.surchargeRate;
+    finalPrice *= adjustments.fuelSurcharge;
+  }
+  
+  // Apply terrain adjustments
+  if (terrainType) {
+    const terrainAdjustments = {
+      'urban': 1.0,
+      'peri-urban': 1.1,
+      'rural': 1.25,
+      'mountain': 1.4
+    };
+    
+    const terrainAdjustment = terrainAdjustments[terrainType as keyof typeof terrainAdjustments] || 1.0;
+    if (terrainAdjustment !== 1.0) {
+      adjustments.terrain = terrainAdjustment;
+      finalPrice *= terrainAdjustment;
+    }
+  }
+  
+  return {
+    adjustedPrice: finalPrice,
+    adjustments
+  };
 }

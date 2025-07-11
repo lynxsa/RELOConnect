@@ -1,6 +1,8 @@
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import RealTimeTrackingHandler from './trackingHandlers.js';
+import { setupChatHandlers } from './chatHandlers.js';
 
 const prisma = new PrismaClient();
 
@@ -13,6 +15,12 @@ interface SocketUser {
 const connectedUsers = new Map<string, SocketUser>();
 
 export const setupSocketHandlers = (io: Server) => {
+  // Initialize real-time tracking handler
+  const trackingHandler = new RealTimeTrackingHandler(io);
+  
+  // Initialize comprehensive chat handlers
+  setupChatHandlers(io);
+  
   // Authentication middleware for socket connections
   io.use(async (socket, next) => {
     try {
@@ -57,9 +65,6 @@ export const setupSocketHandlers = (io: Server) => {
 
     // Handle user going online/offline for drivers
     handleDriverStatus(socket);
-
-    // Handle chat events
-    handleChatEvents(socket, io);
 
     // Handle booking events
     handleBookingEvents(socket, io);
@@ -112,38 +117,6 @@ const handleDriverStatus = (socket: any) => {
     } catch (error) {
       console.error('Driver offline error:', error);
     }
-  });
-};
-
-// Chat event handlers
-const handleChatEvents = (socket: any, io: Server) => {
-  const userId = socket.data.userId;
-
-  socket.on('chat:join_conversation', (data: { partnerId: string }) => {
-    const roomId = [userId, data.partnerId].sort().join('-');
-    socket.join(roomId);
-  });
-
-  socket.on('chat:leave_conversation', (data: { partnerId: string }) => {
-    const roomId = [userId, data.partnerId].sort().join('-');
-    socket.leave(roomId);
-  });
-
-  socket.on('chat:typing', (data: { partnerId: string, isTyping: boolean }) => {
-    const roomId = [userId, data.partnerId].sort().join('-');
-    socket.to(roomId).emit('chat:user_typing', {
-      userId,
-      isTyping: data.isTyping
-    });
-  });
-
-  socket.on('chat:message_sent', (messageData: any) => {
-    // Emit to receiver
-    io.to(messageData.receiverId).emit('chat:new_message', messageData);
-    
-    // Emit to conversation room
-    const roomId = [userId, messageData.receiverId].sort().join('-');
-    socket.to(roomId).emit('chat:new_message', messageData);
   });
 };
 

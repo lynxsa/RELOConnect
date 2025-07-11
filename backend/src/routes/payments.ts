@@ -2,6 +2,7 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import Stripe from 'stripe';
+import { paymentService } from '../services/paymentService.js';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -511,6 +512,170 @@ router.get('/config/stripe', async (req, res) => {
   } catch (error) {
     console.error('Get Stripe config error:', error);
     return res.status(500).json({ error: 'Failed to fetch payment configuration' });
+  }
+});
+
+// Enhanced Payment Routes with Payment Service Integration
+
+// Calculate commission for booking
+router.post('/calculate-commission', async (req, res) => {
+  try {
+    const { bookingId, vehicleType, totalAmount } = req.body;
+
+    if (!bookingId || !vehicleType || !totalAmount) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const commission = await paymentService.calculateCommission(
+      bookingId,
+      vehicleType,
+      totalAmount
+    );
+
+    return res.json({
+      success: true,
+      commission,
+    });
+  } catch (error) {
+    console.error('Calculate commission error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to calculate commission',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Generate invoice for booking
+router.get('/invoice/:bookingId', async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const userId = (req as any).userId;
+
+    // Verify booking belongs to user
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking || booking.userId !== userId) {
+      return res.status(404).json({ error: 'Booking not found or unauthorized' });
+    }
+
+    const invoice = await paymentService.generateInvoice(bookingId);
+
+    return res.json({
+      success: true,
+      invoice,
+    });
+  } catch (error) {
+    console.error('Generate invoice error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to generate invoice',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Enhanced refund with payment service
+router.post('/enhanced-refund', async (req, res) => {
+  try {
+    const { paymentIntentId, amount, reason } = req.body;
+
+    if (!paymentIntentId) {
+      return res.status(400).json({ error: 'Payment intent ID is required' });
+    }
+
+    const refund = await paymentService.processRefund(
+      paymentIntentId,
+      amount,
+      reason || 'requested_by_customer'
+    );
+
+    return res.json({
+      success: true,
+      refund,
+    });
+  } catch (error) {
+    console.error('Enhanced refund error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to process refund',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Save payment method
+router.post('/payment-methods', async (req, res) => {
+  try {
+    const userId = (req as any).userId;
+    const { paymentMethodId, isDefault } = req.body;
+
+    if (!paymentMethodId) {
+      return res.status(400).json({ error: 'Payment method ID is required' });
+    }
+
+    await paymentService.savePaymentMethod(userId, paymentMethodId, isDefault);
+
+    return res.json({
+      success: true,
+      message: 'Payment method saved successfully',
+    });
+  } catch (error) {
+    console.error('Save payment method error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to save payment method',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Create Yoco payment intent
+router.post('/yoco/create-intent', async (req, res) => {
+  try {
+    const { amount, bookingId } = req.body;
+    const userId = (req as any).userId;
+
+    if (!amount || !bookingId) {
+      return res.status(400).json({ error: 'Amount and booking ID are required' });
+    }
+
+    // Verify booking belongs to user
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!booking || booking.userId !== userId) {
+      return res.status(404).json({ error: 'Booking not found or unauthorized' });
+    }
+
+    const paymentIntent = await paymentService.createYocoPaymentIntent(
+      amount,
+      'ZAR',
+      {
+        bookingId,
+        userId,
+        customerName: `${booking.user.firstName} ${booking.user.lastName}`,
+      }
+    );
+
+    return res.json({
+      success: true,
+      paymentIntent,
+    });
+  } catch (error) {
+    console.error('Yoco payment intent error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to create Yoco payment intent',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 });
 

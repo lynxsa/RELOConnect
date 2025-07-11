@@ -232,6 +232,24 @@ export const EXTRA_SERVICES: ExtraService[] = [
     price: 100,
     unit: '15min',
     icon: '⏰'
+  },
+  {
+    id: 'security-escort',
+    name: 'Security Escort',
+    code: 'SECURITY',
+    description: 'Security escort for valuable items or high-risk areas',
+    priceType: 'flat',
+    price: 750,
+    icon: '🛡️'
+  },
+  {
+    id: 'customs-handling',
+    name: 'Customs Handling',
+    code: 'CUSTOMS',
+    description: 'Assistance with cross-border documentation and customs',
+    priceType: 'flat',
+    price: 1200,
+    icon: '📋'
   }
 ];
 

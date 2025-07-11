@@ -18,11 +18,16 @@ import pricingRoutes from './routes/pricing';
 import onboardingRoutes from './routes/onboarding';
 import adminRoutes from './routes/admin';
 import aiRoutes from './routes/ai';
+import fleetRoutes from './routes/fleet';
+import safetyRoutes from './routes/safety';
+import notificationRoutes from './routes/notifications';
+import driverPayoutRoutes from './routes/driverPayouts';
 
 import { setupSocketHandlers } from './socket/handlers';
 import { errorHandler } from './middleware/errorHandler';
 import { authMiddleware } from './middleware/auth';
 import { prismaMiddleware } from './middleware/prisma';
+import { notificationService } from './services/notificationService';
 
 dotenv.config();
 
@@ -59,6 +64,10 @@ app.use('/api/pricing', pricingRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/fleet', authMiddleware, fleetRoutes);
+app.use('/api/safety-reports', authMiddleware, safetyRoutes);
+app.use('/api/notifications', authMiddleware, notificationRoutes);
+app.use('/api/driver-payouts', driverPayoutRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -80,13 +89,30 @@ app.get('/api/status', (req, res) => {
       'POST /api/bookings',
       'GET /api/news',
       'GET /api/ports',
-      'GET /api/donations'
+      'GET /api/donations',
+      'GET /api/fleet',
+      'POST /api/fleet',
+      'GET /api/fleet/:id/trucks',
+      'POST /api/fleet/:id/trucks',
+      'POST /api/fleet/:id/drivers',
+      'GET /api/safety-reports',
+      'POST /api/safety-reports',
+      'GET /api/safety-reports/stats/overview',
+      'GET /api/notifications',
+      'PATCH /api/notifications/read',
+      'GET /api/notifications/unread/count',
+      'POST /api/notifications/alert',
+      'GET /api/driver-payouts',
+      'POST /api/driver-payouts'
     ]
   });
 });
 
 // Setup Socket.IO handlers
 setupSocketHandlers(io);
+
+// Set up notification service with Socket.IO
+notificationService.setSocketServer(io);
 
 // Error handling middleware
 app.use(errorHandler);
