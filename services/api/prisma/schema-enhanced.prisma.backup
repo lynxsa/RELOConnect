@@ -1,0 +1,341 @@
+// Enhanced Prisma Schema for RELOConnect Secure Onboarding
+// Multi-role platform with strict KYC/KYB compliance
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== CORE ENTITIES =====
+
+model Owner {
+  id              String    @id @default(cuid())
+  name            String
+  businessName    String?
+  regNumber       String?   @unique
+  vatNumber       String?   @unique
+  contactInfo     Json      // {email, phone, address}
+  kycStatus       KYCStatus @default(PENDING)
+  riskScore       Float?    @default(0.0)
+  verifiedAt      DateTime?
+  
+  // Documents & Verification
+  idDocuments     Json?     // {front, back, extractedData}
+  uboDocuments    Json?     // Ultimate Beneficial Owner docs
+  selfieUrl       String?
+  faceVerification Json?    // {matchScore, livenessScore, timestamp}
+  
+  // Onboarding metadata
+  onboardingStep  Int       @default(0)
+  inviteCode      String?   @unique
+  lastLoginAt     DateTime?
+  
+  // Relations
+  trucks          Truck[]
+  drivers         Driver[]
+  assistants      Assistant[] @relation("OwnerAssistants")
+  bookings        Booking[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([kycStatus])
+  @@index([regNumber])
+  @@index([vatNumber])
+  @@map("owners")
+}
+
+model Truck {
+  id              String    @id @default(cuid())
+  ownerId         String
+  plate           String    @unique
+  makeModel       String
+  capacityTons    Float
+  gpsDeviceId     String?   @unique
+  
+  // Documents with expiry tracking
+  documents       Json      // {licenseDisc, insurance, roadWorthiness}
+  docExpiryDates  Json      // {licenseDisc: "2025-12-31", ...}
+  
+  // Operational status
+  status          TruckStatus @default(INACTIVE)
+  location        Json?     // {lat, lng, timestamp}
+  
+  // Relations
+  owner           Owner     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  drivers         Driver[]
+  bookings        Booking[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([ownerId])
+  @@index([status])
+  @@index([plate])
+  @@map("trucks")
+}
+
+model Driver {
+  id              String    @id @default(cuid())
+  ownerId         String
+  truckId         String?   @unique
+  
+  // Personal info
+  name            String
+  email           String    @unique
+  phone           String    @unique
+  dob             DateTime
+  licenseNumber   String    @unique
+  
+  // Verification documents
+  licenseDocs     Json      // {front, back, extractedData}
+  selfieUrl       String?
+  faceVerification Json     // {matchScore, livenessScore, timestamp}
+  
+  // Banking & payouts
+  bankInfo        Json?     // {accountNumber, bankCode, accountHolder}
+  
+  // Status & compliance
+  kycStatus       KYCStatus @default(PENDING)
+  backgroundCheck Json?     // {status, report, timestamp}
+  riskScore       Float?    @default(0.0)
+  
+  // Onboarding
+  inviteToken     String?   @unique
+  invitedAt       DateTime?
+  verifiedAt      DateTime?
+  
+  // Relations
+  owner           Owner     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  truck           Truck?    @relation(fields: [truckId], references: [id], onDelete: SetNull)
+  bookings        Booking[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([kycStatus])
+  @@index([licenseNumber])
+  @@index([ownerId])
+  @@map("drivers")
+}
+
+model Assistant {
+  id              String    @id @default(cuid())
+  parentId        String    // Can be Owner or Driver ID
+  parentType      ParentType
+  
+  // Personal info
+  name            String
+  email           String?   @unique
+  phone           String    @unique
+  
+  // Verification
+  idDocuments     Json      // {front, back, extractedData}
+  selfieUrl       String?
+  faceVerification Json?    // {matchScore, livenessScore, timestamp}
+  
+  // Background checks
+  backgroundCheckDocs Json? // {criminalRecord, references}
+  vettingStatus   VettingStatus @default(PENDING)
+  
+  // Relations
+  owner           Owner?    @relation("OwnerAssistants", fields: [parentId], references: [id])
+  bookings        Booking[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("assistants")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  phone           String    @unique
+  
+  // Optional verification for high-value bookings
+  idDocuments     Json?     // {front, back, extractedData}
+  selfieUrl       String?
+  faceVerification Json?    // {matchScore, livenessScore, timestamp}
+  verificationLevel VerificationLevel @default(BASIC)
+  
+  // Account status
+  isActive        Boolean   @default(true)
+  riskScore       Float?    @default(0.0)
+  
+  // Relations
+  bookings        Booking[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("users")
+}
+
+// ===== BOOKING & OPERATIONAL MODELS =====
+
+model Booking {
+  id              String    @id @default(cuid())
+  userId          String
+  ownerId         String?
+  driverId        String?
+  truckId         String?
+  assistantId     String?
+  
+  // Booking details
+  bookingNumber   String    @unique
+  status          BookingStatus @default(PENDING)
+  
+  // Location & logistics
+  pickupLocation  Json      // {address, lat, lng, contactPerson}
+  dropoffLocation Json      // {address, lat, lng, contactPerson}
+  
+  // Pricing & payment
+  estimatedPrice  Float
+  finalPrice      Float?
+  currency        String    @default("ZAR")
+  
+  // AI enhancements
+  aiParsedData    Json?     // Gemini parsed booking details
+  aiRecommendations Json?   // Truck/route recommendations
+  
+  // Scheduling
+  scheduledAt     DateTime
+  completedAt     DateTime?
+  
+  // Relations
+  user            User      @relation(fields: [userId], references: [id])
+  owner           Owner?    @relation(fields: [ownerId], references: [id])
+  driver          Driver?   @relation(fields: [driverId], references: [id])
+  truck           Truck?    @relation(fields: [truckId], references: [id])
+  assistant       Assistant? @relation(fields: [assistantId], references: [id])
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([status])
+  @@index([userId])
+  @@index([scheduledAt])
+  @@map("bookings")
+}
+
+// ===== AUDIT & COMPLIANCE =====
+
+model AuditLog {
+  id              String    @id @default(cuid())
+  entityType      String    // "Owner", "Driver", "Truck", etc.
+  entityId        String
+  action          String    // "CREATED", "VERIFIED", "REJECTED", etc.
+  actorType       String    // "ADMIN", "SYSTEM", "USER"
+  actorId         String?
+  
+  // Change details
+  changes         Json      // Before/after values
+  metadata        Json?     // Additional context
+  ipAddress       String?
+  userAgent       String?
+  
+  // Polymorphic relations - stored as strings, no FK constraints
+  // Use entityType and entityId to identify the related entity
+  
+  timestamp       DateTime  @default(now())
+  
+  @@index([entityType, entityId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// ===== AI INTEGRATION MODELS =====
+
+model AIInteraction {
+  id              String    @id @default(cuid())
+  userId          String?   // Could be any user type
+  userType        String    // "Owner", "Driver", "User", "Admin"
+  
+  // AI session details
+  sessionId       String
+  interactionType String    // "BOOKING_PARSE", "TRUCK_RECOMMEND", "ETA_PREDICT", "CHAT"
+  
+  // Request/response
+  prompt          String
+  response        Json
+  confidence      Float?
+  tokens          Int?      // Usage tracking
+  
+  // Gemini metadata
+  modelUsed       String    // "gemini-pro", "gemini-vision", etc.
+  processingTime  Int?      // milliseconds
+  
+  timestamp       DateTime  @default(now())
+  
+  @@index([sessionId])
+  @@index([interactionType])
+  @@index([timestamp])
+  @@map("ai_interactions")
+}
+
+// ===== SYSTEM CONFIGURATION =====
+
+model SystemConfig {
+  id              String    @id @default(cuid())
+  key             String    @unique
+  value           Json
+  description     String?
+  
+  updatedBy       String?   // Admin ID
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("system_config")
+}
+
+// ===== ENUMS =====
+
+enum KYCStatus {
+  PENDING
+  DOCUMENTS_REQUIRED
+  UNDER_REVIEW
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum VettingStatus {
+  PENDING
+  DOCUMENTS_REQUIRED
+  BACKGROUND_CHECK
+  APPROVED
+  REJECTED
+}
+
+enum TruckStatus {
+  INACTIVE
+  AVAILABLE
+  IN_TRANSIT
+  MAINTENANCE
+  RETIRED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum ParentType {
+  OWNER
+  DRIVER
+}
+
+enum VerificationLevel {
+  BASIC
+  VERIFIED
+  PREMIUM
+}

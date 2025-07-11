@@ -15,7 +15,6 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@reloconnect/shared": "workspace:*",
     "@prisma/client": "^5.22.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
