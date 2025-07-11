@@ -1,21 +1,37 @@
 declare module 'react-native' {
   import { ComponentType, ReactNode } from 'react';
   
+  // Style types
+  export interface ViewStyle {
+    [key: string]: any;
+  }
+  
+  export interface TextStyle {
+    [key: string]: any;
+  }
+  
+  export interface ImageStyle {
+    [key: string]: any;
+  }
+  
   // Basic component types
   export interface ViewProps {
     children?: ReactNode;
-    style?: any;
+    style?: ViewStyle | ViewStyle[];
     testID?: string;
+    accessibilityState?: { disabled?: boolean; [key: string]: any };
   }
   
   export interface TextProps {
     children?: ReactNode;
-    style?: any;
+    style?: TextStyle | TextStyle[];
     testID?: string;
+    onPress?: () => void;
+    parent?: any;
   }
   
   export interface ScrollViewProps extends ViewProps {
-    contentContainerStyle?: any;
+    contentContainerStyle?: ViewStyle;
     horizontal?: boolean;
     showsVerticalScrollIndicator?: boolean;
     showsHorizontalScrollIndicator?: boolean;
@@ -31,9 +47,17 @@ declare module 'react-native' {
     value?: string;
     onChangeText?: (text: string) => void;
     placeholder?: string;
-    style?: any;
+    style?: TextStyle | TextStyle[];
     multiline?: boolean;
     secureTextEntry?: boolean;
+    testID?: string;
+  }
+
+  export interface ActivityIndicatorProps {
+    size?: 'small' | 'large' | number;
+    color?: string;
+    testID?: string;
+    style?: ViewStyle | ViewStyle[];
   }
   
   // Component declarations
@@ -46,6 +70,7 @@ declare module 'react-native' {
   export const FlatList: ComponentType<any>;
   export const Image: ComponentType<any>;
   export const Modal: ComponentType<any>;
+  export const ActivityIndicator: ComponentType<ActivityIndicatorProps>;
   export const Alert: {
     alert: (title: string, message?: string, buttons?: any[]) => void;
   };
@@ -84,6 +109,8 @@ declare module 'react-native' {
     name: RouteName;
     params: ParamList[RouteName];
   }
+  
+  export function useColorScheme(): 'light' | 'dark' | null;
 }
 
 declare module 'react-native/Libraries/NewAppScreen' {
