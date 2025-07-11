@@ -20,11 +20,11 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.17",
-    "lucide-react": "^0.454.0",
-    "next": "^15.1.0",
-    "react": "18.3.1",
+    "lucide-react": "^0.525.0",
+    "next": "^14.2.0",
+    "react": "18.2.0",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "18.3.1",
+    "react-dom": "18.2.0",
     "react-hook-form": "^7.54.2",
     "recharts": "^2.13.3",
     "socket.io-client": "^4.8.1",
@@ -35,12 +35,14 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
     "autoprefixer": "^10.4.20",
     "eslint": "8.57.1",
-    "eslint-config-next": "15.1.0",
+    "eslint-config-next": "14.2.0",
     "postcss": "^8.5.1",
-    "typescript": "~5.6.3"
+    "typescript": "^5.6.3"
   }
 }

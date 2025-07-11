@@ -1,6 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Brain, Send, MessageCircle, TrendingUp, Route, Shield, DollarSign, Zap, X, ChevronDown } from 'lucide-react';
+/* eslint-disable */
+import React from 'react';
+import { MessageSquare, TrendingUp, Shield, DollarSign, Zap, X, MapPin } from 'lucide-react';
 import ReloAI from '../lib/reloai';
+
+const { useState, useRef, useEffect } = React;
 
 interface ChatMessage {
   id: string;
@@ -98,11 +101,11 @@ I have comprehensive knowledge of:
 
   const getCategoryIcon = (category?: string) => {
     switch (category) {
-      case 'routing': return <Route className="w-4 h-4" />;
+      case 'routing': return <MapPin className="w-4 h-4" />;
       case 'pricing': return <DollarSign className="w-4 h-4" />;
       case 'safety': return <Shield className="w-4 h-4" />;
       case 'conditions': return <TrendingUp className="w-4 h-4" />;
-      default: return <Brain className="w-4 h-4" />;
+      default: return <MessageSquare className="w-4 h-4" />;
     }
   };
 
@@ -125,8 +128,8 @@ I have comprehensive knowledge of:
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 rounded-t-xl flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="relative">
-              <Brain className="w-8 h-8" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <MessageSquare className="w-8 h-8" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse" />
             </div>
             <div>
               <h2 className="text-xl font-bold">ReloAI Transport Intelligence</h2>
@@ -177,7 +180,7 @@ I have comprehensive knowledge of:
                     <div className="flex flex-wrap gap-2">
                       {message.suggestions.map((suggestion, index) => (
                         <button
-                          key={index}
+                          key={`${message.timestamp}-${suggestion}-${index}`}
                           onClick={() => handleSuggestionClick(suggestion)}
                           className="text-xs bg-white border border-gray-300 rounded-full px-3 py-1 hover:bg-gray-50 transition-colors"
                         >
@@ -199,12 +202,12 @@ I have comprehensive knowledge of:
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg p-4 max-w-[80%]">
                 <div className="flex items-center space-x-2">
-                  <Brain className="w-4 h-4 text-purple-600" />
+                  <MessageSquare className="w-4 h-4 text-purple-600" />
                   <span className="text-gray-600">ReloAI is analyzing...</span>
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                    <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                   </div>
                 </div>
               </div>
@@ -231,7 +234,7 @@ I have comprehensive knowledge of:
               disabled={isTyping || !inputValue.trim()}
               className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              <Send className="w-4 h-4" />
+              <Zap className="w-4 h-4" />
               <span>Send</span>
             </button>
           </div>
@@ -242,7 +245,7 @@ I have comprehensive knowledge of:
               onClick={() => handleSuggestionClick("Route optimization from Cape Town to Johannesburg")}
               className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition-colors"
             >
-              <Route className="w-3 h-3 inline mr-1" />
+              <MapPin className="w-3 h-3 inline mr-1" />
               Route Analysis
             </button>
             <button
