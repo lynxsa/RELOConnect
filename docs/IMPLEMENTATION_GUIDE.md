@@ -12,7 +12,7 @@ Update `apps/user-app/package.json`:
   // Change to:
   "main": "App.tsx",
 }
-```
+```text
 
 ### 2. Fix TypeScript Navigation Errors
 
@@ -30,7 +30,7 @@ export type RootTabParamList = {
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   BottomTabScreenProps<RootTabParamList, Screen>;
-```
+```text
 
 ### 3. Fix Screen Component Types
 
@@ -45,7 +45,7 @@ type Props = RootTabScreenProps<'Book'>;
 const BookingScreen: React.FC<Props> = ({ navigation, route }) => {
   // Component logic
 };
-```
+```text
 
 ### 4. Create Role Management Context
 
@@ -93,7 +93,7 @@ export const useUser = () => {
   }
   return context;
 };
-```
+```text
 
 ## 🏗️ Unified Architecture Implementation
 
@@ -119,7 +119,7 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-```
+```text
 
 ### 2. Create Smart Navigation Component
 
@@ -196,36 +196,36 @@ export const AppNavigator: React.FC = () => {
         headerTintColor: '#fff',
       })}
     >
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={isDriverMode ? DriverDashboardScreen : HomeScreen}
-        options={{ 
+        options={{
           title: isDriverMode ? 'Dashboard' : 'RELOConnect'
         }}
       />
-      <Tab.Screen 
-        name="Book" 
+      <Tab.Screen
+        name="Book"
         component={BookingScreen}
-        options={{ 
+        options={{
           title: isDriverMode ? 'Jobs' : 'Book Move'
         }}
       />
-      <Tab.Screen 
-        name="Track" 
+      <Tab.Screen
+        name="Track"
         component={TrackingScreen}
-        options={{ 
+        options={{
           title: isDriverMode ? 'Earnings' : 'Track'
         }}
       />
-      <Tab.Screen 
-        name="Profile" 
+      <Tab.Screen
+        name="Profile"
         component={ProfileScreen}
         options={{ title: 'Profile' }}
       />
     </Tab.Navigator>
   );
 };
-```
+```text
 
 ### 3. Update Profile Screen for Role Switching
 
@@ -241,7 +241,7 @@ const ProfileScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
-      
+
       {(role === 'both' || role === 'driver') && (
         <View style={styles.switchContainer}>
           <Text style={styles.switchLabel}>Driver Mode</Text>
@@ -253,7 +253,7 @@ const ProfileScreen: React.FC = () => {
           />
         </View>
       )}
-      
+
       <Text style={styles.modeText}>
         Current Mode: {isDriverMode ? 'Driver' : 'User'}
       </Text>
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
-```
+```text
 
 ## 🚀 Next Steps Implementation Plan
 

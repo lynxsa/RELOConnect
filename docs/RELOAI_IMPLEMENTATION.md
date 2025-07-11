@@ -30,7 +30,7 @@ Successfully implemented ReloAI, a comprehensive South African transport intelli
 
 ### 📱 Mobile Integration (User App)
 
-- **Floating ReloAI Button**: 
+- **Floating ReloAI Button**:
   - Positioned above the tab bar
   - Subtle pulsing animation
   - Gradient design with notification indicator

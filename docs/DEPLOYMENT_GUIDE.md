@@ -63,7 +63,7 @@ services:
 
 volumes:
   postgres_data:
-```
+```text
 
 #### Kubernetes Deployment
 
@@ -122,7 +122,7 @@ spec:
             port: 5000
           initialDelaySeconds: 5
           periodSeconds: 5
-```
+```text
 
 ### Environment Configuration
 
@@ -176,7 +176,7 @@ CORS_ORIGIN=https://app.reloconnect.co.za,https://admin.reloconnect.co.za
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
-```
+```text
 
 ### CI/CD Pipeline
 
@@ -205,25 +205,25 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
-      
+
       - name: Install dependencies
         working-directory: backend
         run: npm ci
-      
+
       - name: Run Prisma generate
         working-directory: backend
         run: npx prisma generate
-      
+
       - name: Run tests
         working-directory: backend
         run: npm run test:coverage
@@ -231,7 +231,7 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/reloconnect_test
           JWT_SECRET: test-secret
           GEMINI_API_KEY: test-key
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -241,18 +241,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Run security audit
         working-directory: backend
         run: npm audit --audit-level moderate
-      
+
       - name: Run dependency check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'RELOConnect'
           path: 'backend'
           format: 'JSON'
-      
+
       - name: SAST Scan
         uses: github/super-linter@v4
         env:
@@ -264,17 +264,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -292,7 +292,7 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to Kubernetes
         uses: azure/k8s-deploy@v1
         with:
@@ -302,16 +302,16 @@ jobs:
             k8s/ingress.yaml
           images: |
             ghcr.io/reloconnect/backend:${{ github.sha }}
-      
+
       - name: Run database migrations
         run: |
           kubectl exec deployment/reloconnect-backend -- npm run prisma:migrate:deploy
-      
+
       - name: Verify deployment
         run: |
           kubectl rollout status deployment/reloconnect-backend
           kubectl get pods -l app=reloconnect-backend
-```
+```text
 
 ### Database Migration Strategy
 
@@ -325,24 +325,24 @@ const prisma = new PrismaClient();
 
 async function runMigrations() {
   console.log('Starting production migration...');
-  
+
   try {
     // 1. Backup current database
     console.log('Creating database backup...');
     await createBackup();
-    
+
     // 2. Run migrations
     console.log('Running Prisma migrations...');
     await prisma.$executeRaw`SELECT 1`; // Test connection
-    
+
     // 3. Verify data integrity
     console.log('Verifying data integrity...');
     await verifyDataIntegrity();
-    
+
     // 4. Update search indexes
     console.log('Updating search indexes...');
     await updateSearchIndexes();
-    
+
     console.log('Migration completed successfully!');
   } catch (error) {
     console.error('Migration failed:', error);
@@ -363,7 +363,7 @@ async function verifyDataIntegrity() {
   const ownerCount = await prisma.owner.count();
   const driverCount = await prisma.driver.count();
   const bookingCount = await prisma.booking.count();
-  
+
   console.log(`Verified: ${ownerCount} owners, ${driverCount} drivers, ${bookingCount} bookings`);
 }
 
@@ -378,7 +378,7 @@ async function rollbackMigration() {
 if (require.main === module) {
   runMigrations();
 }
-```
+```text
 
 ### Monitoring & Observability
 
@@ -392,10 +392,10 @@ import { performance } from 'perf_hooks';
 
 export const monitoringMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const startTime = performance.now();
-  
+
   res.on('finish', () => {
     const duration = performance.now() - startTime;
-    
+
     // Log request metrics
     console.log({
       method: req.method,
@@ -405,20 +405,20 @@ export const monitoringMiddleware = (req: Request, res: Response, next: NextFunc
       userAgent: req.get('User-Agent'),
       ip: req.ip,
     });
-    
+
     // Send metrics to monitoring service
     if (duration > 1000) {
       Sentry.captureMessage(`Slow request: ${req.method} ${req.url} (${duration}ms)`, 'warning');
     }
-    
+
     if (res.statusCode >= 500) {
       Sentry.captureMessage(`Server error: ${req.method} ${req.url}`, 'error');
     }
   });
-  
+
   next();
 };
-```
+```text
 
 #### Health Checks
 
@@ -479,7 +479,7 @@ async function checkAIService(): Promise<boolean> {
 }
 
 export default router;
-```
+```text
 
 ### Performance Optimization
 
@@ -502,19 +502,19 @@ export const cacheMiddleware = (ttl: number = 300) => {
     }
 
     const key = `cache:${req.originalUrl}`;
-    
+
     try {
       const cached = await redis.get(key);
       if (cached) {
         return res.json(JSON.parse(cached));
       }
-      
+
       const originalSend = res.json;
       res.json = function(data) {
         redis.setex(key, ttl, JSON.stringify(data));
         return originalSend.call(this, data);
       };
-      
+
       next();
     } catch (error) {
       console.error('Cache error:', error);
@@ -522,7 +522,7 @@ export const cacheMiddleware = (ttl: number = 300) => {
     }
   };
 };
-```
+```text
 
 ### Security Hardening
 
@@ -546,22 +546,22 @@ export const cacheMiddleware = (ttl: number = 300) => {
 server {
     listen 443 ssl http2;
     server_name api.reloconnect.co.za;
-    
+
     ssl_certificate /etc/nginx/ssl/reloconnect.crt;
     ssl_certificate_key /etc/nginx/ssl/reloconnect.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512;
-    
+
     # Security headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
     add_header X-Frame-Options DENY;
     add_header X-Content-Type-Options nosniff;
     add_header X-XSS-Protection "1; mode=block";
-    
+
     # Rate limiting
     limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
     limit_req zone=api burst=20 nodelay;
-    
+
     location / {
         proxy_pass http://backend:5000;
         proxy_http_version 1.1;
@@ -574,7 +574,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
-```
+```text
 
 ### Rollback Procedures
 

@@ -4,12 +4,12 @@
 
 ### Problem Identified
 
-```
-Error: Failed to call into JavaScript module method HMRClient.setup(). 
-Module has not been registered as callable. 
-Registered callable JavaScript modules (n = 0):. 
+```text
+Error: Failed to call into JavaScript module method HMRClient.setup().
+Module has not been registered as callable.
+Registered callable JavaScript modules (n = 0):.
 Did you forget to call `registerCallableModule`?, js engine: hermes
-```
+```text
 
 ### Root Cause Analysis
 
@@ -31,7 +31,7 @@ The error was caused by:
 import { registerRootComponent } from 'expo';
 import App from './App';
 registerRootComponent(App);
-```
+```text
 
 #### 2. Resolved Hermes Engine Conflict
 
@@ -53,13 +53,13 @@ registerRootComponent(App);
 
 #### App Launch Results
 
-```
+```text
 ✓ Metro Bundler: Starting successfully with cleared cache
 ✓ QR Code Generated: Ready for device/simulator connection
 ✓ Web Server: Running on http://localhost:8081
 ✓ No HMR Errors: JavaScript module registration working correctly
 ✓ Expo Go Compatible: Ready for testing on physical devices
-```
+```text
 
 #### Performance Metrics
 

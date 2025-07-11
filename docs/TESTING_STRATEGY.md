@@ -36,7 +36,7 @@
 
 #### Backend Testing
 
-```
+```text
 /backend/tests/
 ├── unit/
 │   ├── services/
@@ -62,11 +62,11 @@
     ├── users.json
     ├── documents/
     └── images/
-```
+```text
 
 #### Mobile Testing
 
-```
+```text
 /mobile/tests/
 ├── unit/
 │   ├── components/
@@ -78,7 +78,7 @@
 └── e2e/
     ├── ios/
     └── android/
-```
+```text
 
 ### Testing Scenarios
 
@@ -149,14 +149,14 @@ jobs:
       - name: Run unit tests
       - name: Run integration tests
       - name: Upload coverage
-      
+
   security:
     runs-on: ubuntu-latest
     steps:
       - name: Security audit
       - name: Dependency check
       - name: SAST scanning
-      
+
   deploy:
     needs: [test, security]
     runs-on: ubuntu-latest
@@ -165,7 +165,7 @@ jobs:
       - name: Deploy to staging
       - name: Run E2E tests
       - name: Deploy to production
-```
+```text
 
 ### Quality Gates
 

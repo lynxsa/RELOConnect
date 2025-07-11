@@ -11,7 +11,7 @@ chmod +x scripts/start-testing.sh scripts/stop-services.sh
 
 # Run automated testing setup
 bash scripts/start-testing.sh
-```
+```text
 
 ### Manual Setup
 If you prefer to set up each component manually:
@@ -36,7 +36,7 @@ npm run dev &
 cd ../user-app
 npm install
 npm start
-```
+```text
 
 ## 📊 Testing Components
 
@@ -70,7 +70,7 @@ curl http://localhost:3000/api/pricing
 
 # Get ports
 curl http://localhost:3000/api/ports
-```
+```text
 
 ### 🌐 Admin Dashboard
 - **URL**: http://localhost:3001
@@ -110,7 +110,7 @@ curl http://localhost:3000/api/ports
 ```bash
 cd apps/user-app
 npm start
-```
+```text
 
 **Testing Options:**
 
@@ -129,7 +129,7 @@ npm run android
 
 # Web Browser
 npm run web
-```
+```text
 
 **Features to Test:**
 
@@ -227,7 +227,7 @@ docker-compose up -d postgres
 cd backend
 npx prisma migrate reset
 npx prisma migrate dev
-```
+```text
 
 ### Backend Issues
 ```bash
@@ -236,7 +236,7 @@ cd backend
 rm -rf node_modules package-lock.json
 npm install
 npm run dev
-```
+```text
 
 ### Mobile App Issues
 ```bash
@@ -250,7 +250,7 @@ npx expo start --reset-cache
 cd apps/user-app
 rm -rf node_modules package-lock.json
 npm install
-```
+```text
 
 ### Admin Dashboard Issues
 ```bash
@@ -259,7 +259,7 @@ cd apps/admin-dashboard
 rm -rf .next node_modules package-lock.json
 npm install
 npm run dev
-```
+```text
 
 ## 📊 Performance Testing
 
@@ -270,7 +270,7 @@ npm install -g artillery
 
 # Test API endpoints
 artillery quick --count 10 --num 5 http://localhost:3000/api/health
-```
+```text
 
 ### Mobile Performance
 - Test on low-end devices

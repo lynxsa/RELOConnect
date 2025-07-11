@@ -4,7 +4,7 @@
 
 ### Existing Structure
 
-```
+```text
 RELOConnect/
 ├── apps/
 │   ├── user-app/          # Primary mobile app (React Native + Expo)
@@ -12,7 +12,7 @@ RELOConnect/
 │   └── admin-dashboard/   # Web dashboard (Next.js)
 ├── backend/               # Node.js API server
 └── libs/shared/          # Shared utilities and types
-```
+```text
 
 ### Issues Identified
 
@@ -63,33 +63,33 @@ interface UserContext {
 // Navigation Structure
 const TabNavigator = () => {
   const { isDriverMode } = useUserContext();
-  
+
   return (
     <Tab.Navigator>
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={isDriverMode ? DriverDashboard : UserHome}
         options={{ title: isDriverMode ? 'Dashboard' : 'Book Move' }}
       />
-      <Tab.Screen 
-        name="Activity" 
+      <Tab.Screen
+        name="Activity"
         component={isDriverMode ? DriverJobs : UserTracking}
         options={{ title: isDriverMode ? 'Jobs' : 'Track' }}
       />
-      <Tab.Screen 
-        name="Earnings" 
+      <Tab.Screen
+        name="Earnings"
         component={isDriverMode ? DriverEarnings : UserPayments}
         options={{ title: isDriverMode ? 'Earnings' : 'Payments' }}
       />
-      <Tab.Screen 
-        name="Profile" 
+      <Tab.Screen
+        name="Profile"
         component={UnifiedProfile}
         options={{ title: 'Profile' }}
       />
     </Tab.Navigator>
   );
 };
-```
+```text
 
 ### User Experience Flow
 

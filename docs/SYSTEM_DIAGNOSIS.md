@@ -38,7 +38,7 @@ pkill -f tsx
 rm -rf node_modules/.cache
 rm -rf .expo
 rm -rf backend/dist
-```
+```text
 
 #### Step 1.2: Verify Core Services
 
@@ -49,7 +49,7 @@ docker exec reloconnect-postgres pg_isready -U reloconnect
 
 # Test database connection
 docker exec -it reloconnect-postgres psql -U reloconnect -c "\l"
-```
+```text
 
 #### Step 1.3: Update Dependencies
 
@@ -58,7 +58,7 @@ docker exec -it reloconnect-postgres psql -U reloconnect -c "\l"
 npm update
 npx expo install --fix
 cd backend && npm update
-```
+```text
 
 ### Phase 2: Backend Stabilization (20 minutes)
 
@@ -69,7 +69,7 @@ cd backend
 npx prisma generate
 npx prisma db push --force-reset
 npx prisma db seed
-```
+```text
 
 #### Step 2.2: Backend Testing
 
@@ -83,7 +83,7 @@ npm run dev
 # Test API endpoints
 curl http://localhost:3001/health
 curl http://localhost:3001/api/status
-```
+```text
 
 ### Phase 3: Mobile App Resolution (25 minutes)
 
@@ -98,7 +98,7 @@ npm install -g @expo/cli@latest
 
 # Use latest stable Expo SDK
 npx expo install expo@latest
-```
+```text
 
 #### Step 3.2: Node.js Compatibility Fix
 
@@ -108,7 +108,7 @@ node --version  # Should be 18.x or 20.x
 
 # If using Node 21+, downgrade to 20 LTS
 nvm use 20  # if using nvm
-```
+```text
 
 #### Step 3.3: Alternative Development Approach
 
@@ -122,7 +122,7 @@ npx expo start --web
 
 # Option 3: Use tunnel mode
 npx expo start --tunnel
-```
+```text
 
 ### Phase 4: Integration Testing (15 minutes)
 
@@ -151,21 +151,21 @@ npx expo start --tunnel
 ```bash
 npx react-native init RELOConnectRN
 # Migrate screens and components manually
-```
+```text
 
 #### Option B: Expo Development Build
 
 ```bash
 npx expo install expo-dev-client
 npx expo run:ios --device
-```
+```text
 
 #### Option C: Web-First Development
 
 ```bash
 # Focus on web version first, mobile later
 npx expo start --web
-```
+```text
 
 ### If Database Issues Persist
 
@@ -175,21 +175,21 @@ npx expo start --web
 # Install PostgreSQL locally
 brew install postgresql@15
 createdb reloconnect_dev
-```
+```text
 
 #### Option B: Supabase Cloud
 
 ```bash
 # Use managed PostgreSQL
 # Update DATABASE_URL to Supabase connection string
-```
+```text
 
 #### Option C: SQLite for Development
 
 ```bash
 # Temporary switch to SQLite
 # Update schema.prisma datasource to sqlite
-```
+```text
 
 ---
 

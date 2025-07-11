@@ -29,7 +29,7 @@
    ```typescript
    // OLD (Causing errors)
    import { View, Text } from 'react-native';
-   
+
    // NEW (Working)
    import RN from 'react-native';
    const { View, Text } = RN;
@@ -90,7 +90,7 @@ npm test
 
 # Install any missing dependencies
 npm install --legacy-peer-deps
-```
+```text
 
 ### 🔍 Files That May Still Need Import Fixes
 
@@ -107,7 +107,7 @@ import React from 'react';
 import RN from 'react-native';
 
 const { View, Text, StyleSheet, /* other components */ } = RN;
-```
+```text
 
 ---
 
@@ -116,7 +116,7 @@ const { View, Text, StyleSheet, /* other components */ } = RN;
 The critical TypeScript and module resolution errors that were blocking the RELOConnect platform build have been successfully resolved. The app should now be able to:
 
 1. ✅ Compile without TypeScript errors
-2. ✅ Import React and React Native modules correctly  
+2. ✅ Import React and React Native modules correctly
 3. ✅ Run in Expo development environment
 4. ✅ Build for production deployment
 

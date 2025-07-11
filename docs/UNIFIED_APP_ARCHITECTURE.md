@@ -21,7 +21,7 @@
 
 ### Architecture Overview
 
-```
+```text
 RELOConnect Mobile App
 ├── Auth System (Role-based)
 ├── User Mode
@@ -39,7 +39,7 @@ RELOConnect Mobile App
     ├── Maps Integration
     ├── Payment Processing
     └── Notifications
-```
+```text
 
 ### Role Management
 
@@ -50,7 +50,7 @@ RELOConnect Mobile App
 
 ### Navigation Structure
 
-```
+```text
 Bottom Tabs (Role-dependent):
 
 USER MODE:
@@ -59,7 +59,7 @@ USER MODE:
 - 💰 Payment
 - 👤 Profile
 
-DRIVER MODE:  
+DRIVER MODE:
 - 🚗 Dashboard
 - 📋 Jobs
 - 💰 Earnings
@@ -70,7 +70,7 @@ DUAL MODE:
 - 🚗 Driver
 - 📍 Track
 - 👤 Profile
-```
+```text
 
 ## Implementation Benefits
 

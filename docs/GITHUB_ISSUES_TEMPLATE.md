@@ -4,42 +4,42 @@
 
 ### Week 1: Critical Debugging & App Restoration
 
-**Due Date:** Week 1  
+**Due Date:** Week 1
 **Description:** Eliminate Hermes/HMRClient error and restore clean builds
 
 ### Week 2: Code Cleanup & Dependency Optimization
 
-**Due Date:** Week 2  
+**Due Date:** Week 2
 **Description:** Remove dead code, unify configurations, ensure consistent dependencies
 
 ### Week 3: UI Rebuild & Price Calculator Integration
 
-**Due Date:** Week 3  
+**Due Date:** Week 3
 **Description:** Reconstruct booking flow with real-time pricing for SA market
 
 ### Week 4: Driver & Owner Onboarding + Real-Time Tracking
 
-**Due Date:** Week 4  
+**Due Date:** Week 4
 **Description:** Complete KYC flows and enable live location sharing
 
 ### Week 5: Admin Dashboard Overhaul
 
-**Due Date:** Week 5  
+**Due Date:** Week 5
 **Description:** Build comprehensive admin oversight and control system
 
 ### Week 6: Payment System + Compliance
 
-**Due Date:** Week 6  
+**Due Date:** Week 6
 **Description:** Integrate SA payments, commissions, and automated payouts
 
 ### Week 7: AI & API Integrations
 
-**Due Date:** Week 7  
+**Due Date:** Week 7
 **Description:** Enhance platform with ReloAI, ReloPorts, and ReloNews
 
 ### Week 8: Testing, QA & Beta Launch
 
-**Due Date:** Week 8  
+**Due Date:** Week 8
 **Description:** Validate stability, fix bugs, and roll out to beta testers
 
 ---
@@ -65,12 +65,12 @@ What actually happens
 
 **Environment:**
 - Device: [iOS/Android]
-- OS Version: 
+- OS Version:
 - App Version:
 
 **Priority:** [Critical/High/Medium/Low]
 **Week:** [1-8]
-```
+```text
 
 ### ✨ Feature Request Template
 
@@ -93,7 +93,7 @@ As a [user type], I want [goal] so that [benefit]
 
 **Priority:** [Critical/High/Medium/Low]
 **Week:** [1-8]
-```
+```text
 
 ### 🔧 Technical Task Template
 
@@ -114,7 +114,7 @@ Brief description of the technical task
 
 **Priority:** [Critical/High/Medium/Low]
 **Week:** [1-8]
-```
+```text
 
 ---
 
@@ -122,9 +122,9 @@ Brief description of the technical task
 
 ### Issue #1: Clear Caches & Reinstall Dependencies
 
-**Type:** 🔧 Technical Task  
-**Priority:** Critical  
-**Assignee:** Developer Team  
+**Type:** 🔧 Technical Task
+**Priority:** Critical
+**Assignee:** Developer Team
 
 **Description:**
 Clear all caches and reinstall dependencies to resolve Hermes/HMRClient errors.
@@ -145,13 +145,13 @@ watchman watch-del-all
 npm cache clean --force
 npm install
 npx expo start -c
-```
+```text
 
 ### Issue #2: Configure Hermes Engine
 
-**Type:** 🔧 Technical Task  
-**Priority:** Critical  
-**Assignee:** React Native Developer  
+**Type:** 🔧 Technical Task
+**Priority:** Critical
+**Assignee:** React Native Developer
 
 **Description:**
 Properly configure Hermes JavaScript engine in app.json and ensure compatibility.
@@ -165,9 +165,9 @@ Properly configure Hermes JavaScript engine in app.json and ensure compatibility
 
 ### Issue #3: Fix Entry Point Registration
 
-**Type:** 🐛 Bug Report  
-**Priority:** Critical  
-**Assignee:** React Native Developer  
+**Type:** 🐛 Bug Report
+**Priority:** Critical
+**Assignee:** React Native Developer
 
 **Description:**
 Ensure proper app entry point registration with Expo.
@@ -180,9 +180,9 @@ Ensure proper app entry point registration with Expo.
 
 ### Issue #4: Metro & Babel Configuration
 
-**Type:** 🔧 Technical Task  
-**Priority:** High  
-**Assignee:** Build Engineer  
+**Type:** 🔧 Technical Task
+**Priority:** High
+**Assignee:** Build Engineer
 
 **Description:**
 Verify and fix Metro bundler and Babel configuration.
@@ -196,9 +196,9 @@ Verify and fix Metro bundler and Babel configuration.
 
 ### Issue #5: Dev Client Launch Testing
 
-**Type:** 🔧 Technical Task  
-**Priority:** High  
-**Assignee:** QA Engineer  
+**Type:** 🔧 Technical Task
+**Priority:** High
+**Assignee:** QA Engineer
 
 **Description:**
 Test dev client launch and verify error resolution.
@@ -216,9 +216,9 @@ Test dev client launch and verify error resolution.
 
 ### Issue #6: Dependency Audit & Updates
 
-**Type:** 🔧 Technical Task  
-**Priority:** High  
-**Assignee:** Technical Lead  
+**Type:** 🔧 Technical Task
+**Priority:** High
+**Assignee:** Technical Lead
 
 **Description:**
 Audit and update all dependencies to latest stable versions.
@@ -233,9 +233,9 @@ Audit and update all dependencies to latest stable versions.
 
 ### Issue #7: ESLint & Prettier Setup
 
-**Type:** 🔧 Technical Task  
-**Priority:** Medium  
-**Assignee:** Developer Team  
+**Type:** 🔧 Technical Task
+**Priority:** Medium
+**Assignee:** Developer Team
 
 **Description:**
 Install and configure code linting and formatting tools.
@@ -250,9 +250,9 @@ Install and configure code linting and formatting tools.
 
 ### Issue #8: Monorepo Configuration Cleanup
 
-**Type:** 🔧 Technical Task  
-**Priority:** Medium  
-**Assignee:** DevOps Engineer  
+**Type:** 🔧 Technical Task
+**Priority:** Medium
+**Assignee:** DevOps Engineer
 
 **Description:**
 Clean up monorepo structure and remove duplicate dependencies.
@@ -267,9 +267,9 @@ Clean up monorepo structure and remove duplicate dependencies.
 
 ### Issue #9: Environment Configuration
 
-**Type:** 🔧 Technical Task  
-**Priority:** Medium  
-**Assignee:** DevOps Engineer  
+**Type:** 🔧 Technical Task
+**Priority:** Medium
+**Assignee:** DevOps Engineer
 
 **Description:**
 Set up proper environment configuration management.
@@ -283,9 +283,9 @@ Set up proper environment configuration management.
 
 ### Issue #10: Build Scripts Optimization
 
-**Type:** 🔧 Technical Task  
-**Priority:** Low  
-**Assignee:** Build Engineer  
+**Type:** 🔧 Technical Task
+**Priority:** Low
+**Assignee:** Build Engineer
 
 **Description:**
 Add and optimize build scripts for better developer experience.
@@ -303,9 +303,9 @@ Add and optimize build scripts for better developer experience.
 
 ### Issue #11: Booking Flow Screens Development
 
-**Type:** ✨ Feature Request  
-**Priority:** Critical  
-**Assignee:** Frontend Team  
+**Type:** ✨ Feature Request
+**Priority:** Critical
+**Assignee:** Frontend Team
 
 **Description:**
 Build the complete user booking flow with modern UI.
@@ -323,9 +323,9 @@ As a user, I want to easily book a logistics service so that I can move my items
 
 ### Issue #12: NativeWind Styling Implementation
 
-**Type:** 🔧 Technical Task  
-**Priority:** High  
-**Assignee:** UI/UX Developer  
+**Type:** 🔧 Technical Task
+**Priority:** High
+**Assignee:** UI/UX Developer
 
 **Description:**
 Implement consistent styling using NativeWind (Tailwind-like) framework.
@@ -340,9 +340,9 @@ Implement consistent styling using NativeWind (Tailwind-like) framework.
 
 ### Issue #13: South African Pricing Table Integration
 
-**Type:** ✨ Feature Request  
-**Priority:** Critical  
-**Assignee:** Backend + Frontend Team  
+**Type:** ✨ Feature Request
+**Priority:** Critical
+**Assignee:** Backend + Frontend Team
 
 **Description:**
 Implement the complete SA pricing structure with real-time calculations.
@@ -357,9 +357,9 @@ Implement the complete SA pricing structure with real-time calculations.
 
 ### Issue #14: Price Calculator UI Component
 
-**Type:** ✨ Feature Request  
-**Priority:** High  
-**Assignee:** Frontend Developer  
+**Type:** ✨ Feature Request
+**Priority:** High
+**Assignee:** Frontend Developer
 
 **Description:**
 Build interactive price calculator with live updates.
@@ -378,9 +378,9 @@ Build interactive price calculator with live updates.
 
 ### Issue #15: Owner KYC Flow
 
-**Type:** ✨ Feature Request  
-**Priority:** Critical  
-**Assignee:** Backend + Frontend Team  
+**Type:** ✨ Feature Request
+**Priority:** Critical
+**Assignee:** Backend + Frontend Team
 
 **Description:**
 Complete KYC onboarding flow for business owners.
@@ -396,9 +396,9 @@ Complete KYC onboarding flow for business owners.
 
 ### Issue #16: Driver Onboarding System
 
-**Type:** ✨ Feature Request  
-**Priority:** Critical  
-**Assignee:** Backend + Frontend Team  
+**Type:** ✨ Feature Request
+**Priority:** Critical
+**Assignee:** Backend + Frontend Team
 
 **Description:**
 Build driver invitation and onboarding system.
@@ -413,9 +413,9 @@ Build driver invitation and onboarding system.
 
 ### Issue #17: Assistant (Mover) Onboarding
 
-**Type:** ✨ Feature Request  
-**Priority:** Medium  
-**Assignee:** Backend + Frontend Team  
+**Type:** ✨ Feature Request
+**Priority:** Medium
+**Assignee:** Backend + Frontend Team
 
 **Description:**
 Create simplified onboarding for assistant movers.
@@ -430,9 +430,9 @@ Create simplified onboarding for assistant movers.
 
 ### Issue #18: Real-Time GPS Tracking
 
-**Type:** ✨ Feature Request  
-**Priority:** Critical  
-**Assignee:** Mobile + Backend Team  
+**Type:** ✨ Feature Request
+**Priority:** Critical
+**Assignee:** Mobile + Backend Team
 
 **Description:**
 Implement live location sharing and tracking.

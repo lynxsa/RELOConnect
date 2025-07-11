@@ -103,7 +103,7 @@ A complete, **8‑week milestone plan** to stabilize, refactor, and launch the *
 
    * Create root `.env.example` with:
 
-     ```
+     ```env
      API_URL=https://api.reloconnect.co.za
      PAYSTACK_KEY=pk_live_...
      GEMINI_KEY=...

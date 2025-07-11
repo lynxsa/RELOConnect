@@ -49,7 +49,7 @@
 
 ## 🏗️ CURRENT STRUCTURE
 
-```
+```text
 RELOConnect/
 ├── package.json          ✅ Simplified, compatible versions
 ├── tsconfig.json         ✅ Essential TypeScript config
@@ -59,7 +59,7 @@ RELOConnect/
 │   ├── _layout.tsx      ✅ Simple router layout
 │   └── index.tsx        ✅ Basic home screen
 └── assets/              ✅ Static assets
-```
+```text
 
 ## 🚀 READY FOR DEVELOPMENT
 

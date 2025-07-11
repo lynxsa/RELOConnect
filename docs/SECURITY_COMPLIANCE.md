@@ -26,7 +26,7 @@ interface Permission {
   actions: ('CREATE' | 'READ' | 'UPDATE' | 'DELETE')[];
   conditions?: AccessCondition[];
 }
-```
+```text
 
 #### JWT Security
 
@@ -53,7 +53,7 @@ interface PersonalDataClassification {
   confidential: string[]; // ID numbers, banking details
   restricted: string[];   // Biometric data, background checks
 }
-```
+```text
 
 #### Data Retention Policies
 
@@ -78,7 +78,7 @@ const validateInput = (schema: ZodSchema) => {
     }
   };
 };
-```
+```text
 
 #### File Upload Security
 
@@ -112,7 +112,7 @@ RUN adduser -S reloconnect -u 1001
 USER reloconnect
 COPY --chown=reloconnect:nodejs . .
 RUN npm ci --only=production
-```
+```text
 
 #### Secrets Management
 
@@ -143,14 +143,14 @@ interface POPIACompliance {
     erasure: (userId: string) => Promise<void>;
     portability: (userId: string) => Promise<ExportPackage>;
   };
-  
+
   consentManagement: {
     recordConsent: (userId: string, purpose: string) => Promise<void>;
     withdrawConsent: (userId: string, purpose: string) => Promise<void>;
     getConsentHistory: (userId: string) => Promise<ConsentRecord[]>;
   };
 }
-```
+```text
 
 ### GDPR Compliance (EU Users)
 
@@ -173,7 +173,7 @@ interface ProcessingRecord {
   retentionPeriod: string;
   securityMeasures: string[];
 }
-```
+```text
 
 ### Financial Compliance
 
@@ -226,7 +226,7 @@ interface AuditLog {
   userAgent: string;
   sessionId: string;
 }
-```
+```text
 
 #### Real-Time Monitoring
 
@@ -268,7 +268,7 @@ interface ComplianceCheck {
   lastChecked: Date;
   nextCheck: Date;
 }
-```
+```text
 
 #### Regular Assessments
 

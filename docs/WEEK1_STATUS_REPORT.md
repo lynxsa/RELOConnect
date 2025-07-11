@@ -40,13 +40,13 @@ The system is currently installing dependencies via pnpm and Homebrew. Once comp
 cd /Users/derahmanyelo/Documents/LYNX\ Code\ Vault/RELOConnect
 pnpm install  # If not completed
 npx expo install --fix
-```
+```text
 
 ### Step 2: Start Expo Development Server
 
 ```bash
 npx expo start --clear
-```
+```text
 
 ### Step 3: Test on Device/Simulator
 
@@ -64,7 +64,7 @@ npx expo start --clear
 // BEFORE: Empty file
 // AFTER:
 import 'expo-router/entry';
-```
+```text
 
 ### 2. `/app.json` - Added Hermes Engine
 
@@ -78,7 +78,7 @@ import 'expo-router/entry';
     }
   }
 }
-```
+```text
 
 ### 3. `/babel.config.js` - Created Proper Configuration
 
@@ -93,7 +93,7 @@ module.exports = function (api) {
     ],
   };
 };
-```
+```text
 
 ---
 
@@ -102,7 +102,7 @@ module.exports = function (api) {
 ### ✅ Issues That Should Be Resolved
 
 1. **HMRClient connection errors** - Fixed by proper entry point
-2. **Hermes compilation errors** - Fixed by explicit engine configuration  
+2. **Hermes compilation errors** - Fixed by explicit engine configuration
 3. **Babel transpilation issues** - Fixed by proper babel config
 4. **Metro bundler problems** - Already properly configured
 
@@ -136,7 +136,7 @@ If Hermes still causes issues, temporarily disable it:
 ```json
 // In app.json, remove or comment out:
 // "jsEngine": "hermes"
-```
+```text
 
 ### Fallback Option 2: Reset Everything
 
@@ -144,14 +144,14 @@ If Hermes still causes issues, temporarily disable it:
 rm -rf node_modules .expo
 pnpm install
 npx expo start --clear --reset-cache
-```
+```text
 
 ### Fallback Option 3: Use Development Build
 
 ```bash
 npx expo install expo-dev-client
 npx expo run:ios
-```
+```text
 
 ---
 
@@ -160,7 +160,7 @@ npx expo run:ios
 ### High Priority (Complete Today)
 
 1. ✅ Fix entry point registration
-2. ✅ Configure Hermes engine  
+2. ✅ Configure Hermes engine
 3. ✅ Create babel configuration
 4. 🔄 Install all dependencies (in progress)
 5. ⏳ Test app launch on devices

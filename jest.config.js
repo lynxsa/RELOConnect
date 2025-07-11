@@ -1,25 +1,18 @@
 module.exports = {
-  preset: 'jest-expo',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jsdom',
+  testEnvironment: "node",
+  setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.js', 
+    '<rootDir>/__tests__/setup.ts'
+  ],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|expo|@expo|@react-navigation|react-navigation|@testing-library/react-native|expo-linear-gradient|@expo/vector-icons)/)',
+    'node_modules/(?!(react-native|@react-native|expo|@expo|react-navigation|@react-navigation|@testing-library/react-native|expo-linear-gradient|@expo/vector-icons|@stripe|socket.io-client)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    'app/**/*.{ts,tsx}',
-    'components/**/*.{ts,tsx}',
-    '!**/*.d.ts',
-    '!**/node_modules/**',
-    '!**/__tests__/**',
-    '!**/coverage/**',
-  ],
   testMatch: [
     '**/__tests__/**/*.(ts|tsx|js)',
     '**/*.(test|spec).(ts|tsx|js)',
   ],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
   testPathIgnorePatterns: [
@@ -28,11 +21,4 @@ module.exports = {
     '/build/',
     '/dist/',
   ],
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react-jsx',
-      },
-    },
-  },
 };

@@ -10,7 +10,7 @@
 - [x] **State Management** - Zustand stores with auth and booking state
 - [x] **TypeScript Integration** - Full type safety across navigation and contexts
 
-### Milestone 2: User Experience ✅ COMPLETE  
+### Milestone 2: User Experience ✅ COMPLETE
 
 - [x] **Role Switching UI** - Profile screen with driver mode toggle
 - [x] **Dynamic Tab Navigation** - Different tabs and icons per role
@@ -38,7 +38,7 @@ interface UserContextType {
   toggleDriverMode: () => void;
   // ... full role management
 }
-```
+```text
 
 ### 2. Dynamic Navigation
 
@@ -88,7 +88,7 @@ interface UserContextType {
 - [ ] Route optimization
 - [ ] Driver rating system
 
-### Phase 2B: Advanced User Features (2 weeks)  
+### Phase 2B: Advanced User Features (2 weeks)
 
 - [ ] AI-powered pricing recommendations
 - [ ] Live tracking with driver communication

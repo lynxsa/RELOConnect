@@ -66,11 +66,11 @@ graph TB
 
     DS --> S3
     AS --> S3
-```
+```text
 
 ## 📁 Monorepo Structure
 
-```
+```text
 RELOConnect/
 ├── apps/                          # Frontend applications
 │   ├── user-app/                  # Customer mobile app
@@ -96,7 +96,7 @@ RELOConnect/
 ├── docker-compose.prod.yml        # Production environment
 ├── nginx.conf                     # API Gateway configuration
 └── package.json                   # Monorepo configuration
-```
+```text
 
 ## 🔧 Technology Stack
 
@@ -150,20 +150,20 @@ RELOConnect/
 git clone https://github.com/lynxsa/RELOConnect.git
 cd RELOConnect
 pnpm install
-```
+```text
 
 2. **Start infrastructure services**
 
 ```bash
 docker-compose -f docker-compose.dev.yml up postgres redis -d
-```
+```text
 
 3. **Setup environment variables**
 
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
-```
+```text
 
 4. **Initialize database**
 
@@ -171,14 +171,14 @@ cp .env.example .env
 cd services/auth
 pnpm db:migrate
 pnpm db:seed
-```
+```text
 
 5. **Start all services**
 
 ```bash
 # From root directory
 pnpm dev
-```
+```text
 
 6. **Start mobile apps**
 
@@ -190,7 +190,7 @@ pnpm start
 # Driver app
 cd apps/driver-app
 pnpm start
-```
+```text
 
 ### Production Deployment
 
@@ -200,7 +200,7 @@ docker-compose -f docker-compose.prod.yml up -d
 
 # Or deploy to Kubernetes
 kubectl apply -f k8s/
-```
+```text
 
 ## 📊 Service Details
 
@@ -370,7 +370,7 @@ The pricing service implements a sophisticated algorithm considering:
   "tax": 167,           // 15% VAT
   "total": 1280         // Total amount
 }
-```
+```text
 
 ## 🧪 Testing Strategy
 
@@ -413,14 +413,14 @@ pnpm dev
 
 # Or with Docker
 docker-compose -f docker-compose.dev.yml up
-```
+```text
 
 ### Staging
 
 ```bash
 # Deploy to staging environment
 kubectl apply -f k8s/staging/
-```
+```text
 
 ### Production
 
@@ -430,7 +430,7 @@ kubectl apply -f k8s/production/
 
 # With Helm
 helm upgrade reloconnect ./helm-chart
-```
+```text
 
 ### CI/CD Pipeline
 

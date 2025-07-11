@@ -4,8 +4,8 @@
 
 ### Week 1: CRITICAL - App Restoration
 
-**Status:** 🔴 URGENT - In Progress  
-**Deadline:** End of Week 1  
+**Status:** 🔴 URGENT - In Progress
+**Deadline:** End of Week 1
 **Success Criteria:** Clean mobile builds on iOS/Android without Hermes/HMRClient errors
 
 #### Task Checklist
@@ -19,7 +19,7 @@
   - **Command:** `find . -name "node_modules" -type d -prune -exec rm -rf {} +`
 
 - [ ] **T1.2:** Clear build artifacts (.expo, dist, ios/build, android/build)
-  - **Owner:** DevOps Team  
+  - **Owner:** DevOps Team
   - **Estimated:** 10 minutes
   - **Status:** Ready
   - **Command:** `rm -rf .expo dist ios/build android/build`
@@ -244,7 +244,7 @@
 - **Blockers:** None expected
 - **Focus:** T1.1-T1.5 completion
 
-#### Tuesday Standup  
+#### Tuesday Standup
 
 - **Goal:** Configure Hermes and test performance
 - **Blockers:** Potential Hermes compatibility issues

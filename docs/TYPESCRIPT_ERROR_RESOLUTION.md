@@ -30,7 +30,7 @@ We need to ensure all required type packages are properly installed:
 ```bash
 cd "/Users/derahmanyelo/Documents/LYNX Code Vault/RELOConnect"
 npm install @types/react@18.3.12 @types/react-native@0.73.0 @types/jest@30.0.0
-```
+```text
 
 ### Step 2: Configure TypeScript Properly
 
@@ -120,7 +120,7 @@ npx tsc --noEmit --skipLibCheck
 
 # Try starting Expo
 npx expo start
-```
+```text
 
 ## Current Error Count
 
