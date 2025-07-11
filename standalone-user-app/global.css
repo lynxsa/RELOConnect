@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for RELOConnect */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #0057FF, #00B2FF);
+}
+
+.text-primary {
+  color: #0057FF;
+}
+
+.text-secondary {
+  color: #00B2FF;
+}
