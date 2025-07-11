@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+*.min.js
+*.min.css
+coverage/
+.coverage/
+.nyc_output/
+.env*
+apps/admin-dashboard/

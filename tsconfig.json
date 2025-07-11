@@ -1,5 +1,4 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": false,
     "esModuleInterop": true,
@@ -22,28 +21,26 @@
       "./node_modules/@types"
     ],
     "types": [
-      "jest",
-      "react-native",
-      "expo",
-      "react"
-    ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "jest"
+    ]
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "types/**/*.d.ts",
-    "expo-env.d.ts"
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
     "**/*.test.ts",
-    "backend/**/*"
+    "apps/**/*",
+    "services/**/*",
+    "legacy/**/*",
+    "backend/**/*",
+    "dist/**/*",
+    "coverage/**/*"
+  ],
+  "references": [
+    { "path": "./apps/driver-app" },
+    { "path": "./standalone-user-app" },
+    { "path": "./services/api" }
   ]
 }
